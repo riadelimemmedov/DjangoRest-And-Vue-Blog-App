@@ -5,19 +5,27 @@ from .models import *
 #!BlogSerializer
 class BlogSerializer(serializers.ModelSerializer):
     owner = serializers.CharField(source='owner.user',read_only=True)
-    blog_category = serializers.PrimaryKeyRelatedField(many=True,queryset=Category.objects.filter(id=1))
-    
+    #blog_category = serializers.PrimaryKeyRelatedField(many=True,queryset=Category.objects.filter(id=1))
+    category = serializers.PrimaryKeyRelatedField(read_only=True,source='category.name')
+    blog_comments = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     class Meta:
         model = Blog
-        fields = ['title','body','owner','blog_image','slug','created','updated','blog_category']
+        fields = ['title','body','owner','blog_image','slug','created','updated','category','blog_comments']
 
 #!CategorySerializers
-class CategorySerializer(serializers.ModelSerializer):
-    owner = serializers.CharField(source='owner.user',read_only=True)
+class CategoryBlogSerializer(serializers.ModelSerializer):
+    #owner = serializers.CharField(source='owner.user',read_only=True)
     #blogs = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     
     class Meta:
-        model = Category
-        fields = ['id','name','owner','blogs']
+        model = CategoryBlog
+        fields = ['id','slug']
         
-        
+
+#!CommentSerializer
+class CommentSerializer(serializers.ModelSerializer):
+    profile = serializers.ReadOnlyField(source='profile.user')
+    
+    class Meta:
+        model = CommentBlog
+        fields = ['id','body','profile','blog']

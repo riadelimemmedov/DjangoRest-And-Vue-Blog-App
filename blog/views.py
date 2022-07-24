@@ -1,5 +1,6 @@
 from django.shortcuts import render,get_object_or_404,HttpResponse
 from rest_framework import generics,views,response,status,permissions
+from .permissions import *
 from django.core import serializers
 
 from .models import *
@@ -19,11 +20,28 @@ class BlogListCreateView(generics.ListCreateAPIView):
         serializer.save(owner=profile)
 
 #!CategoryListCreateView
-class CategoryListCreateView(generics.ListCreateAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+class CategoryBlogListCreateView(generics.ListCreateAPIView):
+    queryset = CategoryBlog.objects.all()
+    serializer_class = CategoryBlogSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     def perform_create(self,serializer):
         profile = Profile.objects.get(user=self.request.user)
         serializer.save(owner=profile)
+
+#!CommentBlogListCreateView
+class CommentBlogListCreateView(generics.ListCreateAPIView):
+    queryset = CommentBlog.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def perform_create(self,serializer):
+        profile = Profile.objects.get(user=self.request.user)
+        serializer.save(profile=profile)
+
+#!CommentBlogDetail
+class CommentBlogDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CommentBlog.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly]
+

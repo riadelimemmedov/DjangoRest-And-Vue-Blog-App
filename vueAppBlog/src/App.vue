@@ -1,7 +1,11 @@
 <template>
   <div>
     <Navbar></Navbar>
-    <router-view></router-view>
+
+    <transition name="transitionUrl" mode="out-in" appear>
+      <router-view></router-view>
+    </transition>
+
   </div>
 </template>
 
@@ -20,8 +24,5 @@
 </script>
 
 <style>
-  *{
-    margin:0;
-    padding:0;
-  }
+  @import "./css/app_css/style.css"
 </style>

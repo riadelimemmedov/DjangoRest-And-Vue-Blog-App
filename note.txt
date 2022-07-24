@@ -1,6 +1,9 @@
 1)Created Category +
 2)Modify Read More Text with Vue.js +
 3)Like and Comment model created
-4)Front End De Postlarin Listeledndiyi Yerin Sag terefine bir dene categoriya carti filan elave ele
+4)Front End De Postlarin Listeledndiyi Yerin Sag terefine bir dene categoriya carti filan elave ele+
 
-5)Categoryleri gosterende hemin usera gore categorylere cekerik ele bil 
+
+5)Vue terefdeki css classlarini duzenle+
+
+

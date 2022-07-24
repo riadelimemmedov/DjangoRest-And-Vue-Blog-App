@@ -1,9 +1,27 @@
+from re import S
 from django.db import models
+from django.utils.text import slugify
 
 from user_profile.models import *
 from django.core.validators import FileExtensionValidator
 
 # Create your models here.
+
+#!Categorys
+class CategoryBlog(models.Model):
+    name = models.CharField(max_length=100,blank=False,default='')
+    slug = models.SlugField(max_length=100,db_index=True,blank=True,unique=True)
+    
+    def __str__(self):
+        return str(self.name)
+    
+    def save(self,*args,**kwargs):
+        self.slug = slugify(self.name)
+        super(CategoryBlog,self).save(*args,**kwargs)
+    
+    class Meta:
+        verbose_name = 'CategoryBlog'
+        verbose_name_plural = 'CategoryBlogs'
 
 #!Blog
 class Blog(models.Model):
@@ -11,6 +29,7 @@ class Blog(models.Model):
     body = models.TextField(blank=False)
     owner = models.ForeignKey(Profile,related_name='posts',on_delete=models.CASCADE)
     blog_image = models.ImageField(upload_to='blogpicture',validators=[FileExtensionValidator(['png','jpg','jpeg'])])
+    category = models.ForeignKey(CategoryBlog,related_name='category_post',on_delete=models.CASCADE,null=True)
     slug = models.SlugField(unique=True,db_index=True,blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -31,16 +50,21 @@ class Blog(models.Model):
         ordering = ['-created']
         verbose_name = 'Blog'
         verbose_name_plural = 'Blogs'
-
-#!Categorys
-class Category(models.Model):
-    name = models.CharField(max_length=100,blank=False,default='')
-    owner = models.ForeignKey(Profile,related_name='profile_category',on_delete=models.CASCADE,blank=False)
-    blogs = models.ForeignKey(Blog,related_name='blog_category',on_delete=models.CASCADE,blank=False)
+        
+#!CommentBlog
+class CommentBlog(models.Model):
+    body = models.TextField(blank=False)
+    blog = models.ForeignKey(Blog,related_name='blog_comments',on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile,name='profile_comments',on_delete=models.CASCADE)
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return str(self.name)
+        return f"Comments To - {self.blog.title}"
     
     class Meta:
-        verbose_name = 'Category'
-        verbose_name_plural = 'Categories'
+        ordering = ['-created']
+        verbose_name = 'CommentBlog'
+        verbose_name_plural = 'CommentBlogs'
+    
+    
