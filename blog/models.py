@@ -55,7 +55,7 @@ class Blog(models.Model):
 class CommentBlog(models.Model):
     body = models.TextField(blank=False)
     blog = models.ForeignKey(Blog,related_name='blog_comments',on_delete=models.CASCADE)
-    profile = models.ForeignKey(Profile,name='profile_comments',on_delete=models.CASCADE)
+    owner = models.ForeignKey(Profile,related_name='profile_comments',on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
     

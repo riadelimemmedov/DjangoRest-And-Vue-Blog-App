@@ -37,7 +37,8 @@ class CommentBlogListCreateView(generics.ListCreateAPIView):
     
     def perform_create(self,serializer):
         profile = Profile.objects.get(user=self.request.user)
-        serializer.save(profile=profile)
+        print('Noldu amk commenti ', profile)
+        serializer.save(owner=profile)
 
 #!CommentBlogDetail
 class CommentBlogDetail(generics.RetrieveUpdateDestroyAPIView):
