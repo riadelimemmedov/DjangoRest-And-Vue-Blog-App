@@ -1,6 +1,7 @@
 <template>
   <div class="container mb80"><br><br><br>
 
+
     <div class="page-timeline" style="margin-right:150px">
 
       <div class="vtimeline-point" v-for="(post,index) in pageOfItems" :key="index">
@@ -21,14 +22,23 @@
                         <li class="list-inline-item">
                             <i class="fa fa-tags"></i> <a href="#">{{post.category}}</a>
                         </li>
+                        <li class="list-inline-item">
+                          <i class="fa fa-comment" aria-hidden="true"> {{post.blog_comments.length}}</i>
+                        </li>
+                        <li class="list-inline-item">
+                          <i class="fa fa-thumbs-o-up" aria-hidden="true"></i><!-- Like modelini yazandan sonra goster burda her posta gelen like sayini -->
+                        </li>
                     </ul>
                     <p>
                       {{post.body.split(/[!,?,.]/,5).toString()}}...
                     </p><br>
                     <a href="#" class="btn btn-outline-dark btn-sm">Read More</a>
-                    <button id="like-button" class="btn-sm mx-auto text-center">
-                      <i class="fa fa-thumbs-up fa-2x" aria-hidden="true" style="color:#2e86de"></i>
-                    </button>
+                    <form @submit.prevent="likeToPost($event)" method="POST" class="d-inline">
+                      <input type="hidden" :value="post_id=post.id" name="blog_id">
+                      <button id="like-button" class="btn-sm mx-auto text-center" enctype="multipart/form-data">
+                        <i class="fa fa-thumbs-up fa-2x" aria-hidden="true" style="color:#2e86de"></i>
+                      </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -58,7 +68,8 @@
     data() {
       return {
         posts: [],
-        pageOfItems:[]
+        pageOfItems:[],
+        post_id:null
       }
     },
     components:{
@@ -78,7 +89,22 @@
             console.log(response.data)
           })
       },
-      formatDate(value){
+      likeToPost(e){
+        const blog_id = e.target.firstChild.value
+
+        axios({
+          method:'POST',
+          url:'/',
+          data:{
+            "title":"Hello",
+            "body":"Python"
+          },
+          headers:{
+            "Content-Type": "multipart/form-data",
+          }
+        })
+    },
+    formatDate(value){
         if(value){
           return moment(String(value)).format('MMMM DD, YYYY')
         }

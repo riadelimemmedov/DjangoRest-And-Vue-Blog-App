@@ -28,8 +28,8 @@ class Blog(models.Model):
     title = models.CharField(max_length=100,blank=False)
     body = models.TextField(blank=False)
     owner = models.ForeignKey(Profile,related_name='posts',on_delete=models.CASCADE)
-    blog_image = models.ImageField(upload_to='blogpicture',validators=[FileExtensionValidator(['png','jpg','jpeg'])])
-    category = models.ForeignKey(CategoryBlog,related_name='category_post',on_delete=models.CASCADE,null=True)
+    blog_image = models.ImageField(upload_to='blogpicture',validators=[FileExtensionValidator(['png','jpg','jpeg'])],blank=True,null=True)
+    category = models.ForeignKey(CategoryBlog,related_name='category_post',on_delete=models.CASCADE,blank=True,null=True)
     slug = models.SlugField(unique=True,db_index=True,blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -66,5 +66,21 @@ class CommentBlog(models.Model):
         ordering = ['-created']
         verbose_name = 'CommentBlog'
         verbose_name_plural = 'CommentBlogs'
+        
+
+#!Like
+LIKE_CHOICES = (
+    ('Like','Like'),
+    ('Unlike','Unlike'),
+)
+class Like(models.Model):
+    profile = models.ForeignKey(Profile,related_name='profile_like',on_delete=models.CASCADE)
+    post = models.ForeignKey(Blog,related_name='blog_like',on_delete=models.CASCADE)
+    value = models.CharField(max_length=100,choices=LIKE_CHOICES,default='Like')
     
+    def __str__(self):
+        return str(self.value)
     
+    class Meta:
+        verbose_name = 'Like'
+        verbose_name_plural = 'Likes'

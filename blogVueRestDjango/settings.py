@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,6 +65,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'blogVueRestDjango.urls'
+
+
+#<input type="hidden" name="csrfmiddlewaretoken" value="BAqdmB9AcN1gCnNHaKsCPh45Wv5I51xStb1KGlNetOTcp5wmfFihQfBqO2CpmQrt">
 
 TEMPLATES = [
     {
