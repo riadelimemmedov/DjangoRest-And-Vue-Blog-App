@@ -3,7 +3,7 @@ from rest_framework import generics,views,response,status,permissions
 from .permissions import *
 from django.core import serializers
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie
 
 from .models import *
 from .serializers import *
@@ -21,6 +21,8 @@ class BlogListCreateView(generics.ListCreateAPIView):
     def perform_create(self,serializer):
             if self.request.method == 'POST':
                 print(self.request.POST)
+                header_token = self.request.META.get('HTTP_AUTHORIZATION', None)
+                print('Header Token ', header_token)
                 print('Vue terefden axiosdan POST request geldi yoxlama ucun')
                 print('Method Value ', self.request.method)
                 return HttpResponse('Ugurlu bir post reqeust vue terefinden hemde cookie')

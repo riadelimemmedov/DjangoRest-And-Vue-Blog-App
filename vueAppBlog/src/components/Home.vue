@@ -59,7 +59,7 @@
   //Thirty Party Packages
   import axios from 'axios'
   import moment from 'moment'
-
+  import bcrypt from 'bcryptjs'
 
   import PostList from '../partials/PostList.vue'
   import { onUpdated } from 'vue'
@@ -91,13 +91,16 @@
       },
       likeToPost(e){
         const blog_id = e.target.firstChild.value
+        const salt = bcrypt.genSaltSync(10)
+        const csrf = bcrypt.hashSync(blog_id,salt)
 
         axios({
           method:'POST',
           url:'/',
           data:{
+            'csrfmiddlewaretoken':csrf,
             "title":"Hello",
-            "body":"Python"
+            "body":"Python",
           },
           headers:{
             "Content-Type": "multipart/form-data",

@@ -30,6 +30,7 @@ class Blog(models.Model):
     owner = models.ForeignKey(Profile,related_name='posts',on_delete=models.CASCADE)
     blog_image = models.ImageField(upload_to='blogpicture',validators=[FileExtensionValidator(['png','jpg','jpeg'])],blank=True,null=True)
     category = models.ForeignKey(CategoryBlog,related_name='category_post',on_delete=models.CASCADE,blank=True,null=True)
+    liked = models.ManyToManyField(Profile,default=None,blank=True,related_name='liked')
     slug = models.SlugField(unique=True,db_index=True,blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
