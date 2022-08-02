@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     #third party libraries
     'rest_framework',
     'django_filters',
+    'rest_framework.authtoken',
     'corsheaders',  
     'djoser',
     

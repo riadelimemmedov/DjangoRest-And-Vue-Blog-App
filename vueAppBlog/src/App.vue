@@ -10,6 +10,8 @@
 </template>
 
 <script>
+  import axios from 'axios'
+
   import Navbar from './partials/Navbar.vue'
 
   export default {
@@ -19,6 +21,21 @@
     },
     components:{
       'Navbar':Navbar
+    },
+    beforeCreate(){
+      this.$store.commit('initializeStorage')
+
+      const token = this.$store.state.token
+
+      console.log('Login Token Value ', token);
+
+      if(token){
+        axios.defaults.headers.common['Authorization'] = "Token " + token
+      }
+      else{
+        axios.defaults.headers.common['Authorization'] = ''
+      }
+
     }
 }
 </script>
