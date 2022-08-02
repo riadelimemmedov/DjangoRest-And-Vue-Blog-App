@@ -7,3 +7,9 @@
 5)Vue terefdeki css classlarini duzenle+
 
 
+
+
+
+1)Mutleq sekilde Login NI Yene Yoxla Token Filan Nece Isleyir
+2)Logout Yaz amma alert filan yaz bax ne kitabxana tapirsan vue ya gore
+
