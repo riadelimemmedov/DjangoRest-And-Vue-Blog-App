@@ -4,6 +4,9 @@
       <div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
           <div class="card-body">
             <h4 class="card-title mb-4">Login</h4>
+              <div class="alert alert-danger" v-for="error in errors" :key="error">
+                  <strong v-if="errors.length>0">{{error}}</strong>
+              </div>
               <form @submit.prevent="submitLoginForm" method="POST" autocomplete="off">
                   <div class="form-group">
                       <input type="text" v-model="username" class="form-control" placeholder="Email Address" required>
@@ -11,21 +14,23 @@
                   <div class="form-group">
                       <input type="password" v-model="password" class="form-control" placeholder="Password"  required>
                   </div>
-      
+
                   <div class="form-group">
                       <button type="submit" class="btn btn-primary btn-block"> Login  </button>
-                  </div>    
+                  </div>
               </form>
           </div>
-        </div> 
+        </div>
 
         <p class="text-center mt-4">Don't have account?
-          <router-link :to="{name:'sign-up'}">Sign In</router-link>      
+          <router-link :to="{name:'sign-up'}">Sign In</router-link>
         </p>
         <br><br>
 
+
+
   </section>
-  
+
 </template>
 
 <script>
@@ -61,11 +66,13 @@
               this.$store.commit('setToken',token)
               axios.defaults.headers.common['Authorization'] = "Token " + token
               window.localStorage.setItem('token',token)
-              
+
               //After login redirect home page
-              this.$router.redirect({name:'home'})
+              // this.$router.replace({name:'home'})
+              window.location.href = '/'
             })
             .catch((err)=>{
+              console.log('error value in login ', err.data);
               this.errors.push('Something Went Wrong.Please Check Out')
             })
 

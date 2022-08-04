@@ -6,6 +6,7 @@ import Router from 'vue-router'
 import Home from './components/Home.vue'
 import Signup from './components/Signup.vue'
 import Login from './components/Login.vue'
+import PostDetail from './components/PostDetail.vue'
 
 //!Utilize VueRouter
 Vue.use(VueRouter)
@@ -16,7 +17,8 @@ export default new Router({
   routes:[
     {path:'/',component:Home,name:'home'},
     {path:'/sign-up',component:Signup,name:'sign-up'},
-    {path:'/login',component:Login,name:'login'}
+    {path:'/login',component:Login,name:'login'},
+    {path:'/detail',component:PostDetail,name:'detail'}
   ]
 })
 

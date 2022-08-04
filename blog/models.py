@@ -45,7 +45,7 @@ class Blog(models.Model):
     #Bura get_absolute_url(self): elave edersen sonra single postlar ucun
     @property
     def get_absolute_url(self):
-        return f"blog/{self.slug}/"
+        return f"blog/{self.id}/"
     
     class Meta:
         ordering = ['-created']

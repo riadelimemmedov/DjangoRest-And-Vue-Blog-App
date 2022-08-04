@@ -7,7 +7,11 @@ import JwPagination from 'jw-vue-pagination'
 import router from './routes.js'
 import { store } from './store/store.js'
 import Vuelidate from 'vuelidate'
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 
+//!Utilize VueSweetalert2
+Vue.use(VueSweetalert2)
 
 //!Utilize BootstrapVue
 Vue.use(BootstrapVue)

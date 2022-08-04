@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Navbar></Navbar>
+    <Navbar :token_value="token"></Navbar>
 
     <transition name="transitionUrl" mode="out-in" appear>
       <router-view></router-view>
@@ -17,15 +17,17 @@
   export default {
     data () {
       return {
+        token:''
       }
     },
     components:{
       'Navbar':Navbar
     },
-    beforeCreate(){
+    created(){
       this.$store.commit('initializeStorage')
 
       const token = this.$store.state.token
+      this.token = token
 
       console.log('Login Token Value ', token);
 
@@ -35,8 +37,7 @@
       else{
         axios.defaults.headers.common['Authorization'] = ''
       }
-
-    }
+    },
 }
 </script>
 

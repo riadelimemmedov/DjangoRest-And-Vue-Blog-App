@@ -11,7 +11,9 @@
             <div class="vtimeline-block">
                 <span class="vtimeline-date">{{formatDate(post.created)}}</span><div class="vtimeline-content">
                     <a href="#"><img :src="post.blog_image" alt="" class="img-fluid mb20" style="width:700px;height:700px"></a>
-                    <a href="#"><h3>{{post.title}}</h3></a>
+                    
+                    <a href="" @click.prevent="getBlogDetail(post.id)"><h3>{{post.title}}</h3></a>
+                    
                     <ul class="post-meta list-inline">
                         <li class="list-inline-item">
                             <i class="fa fa-user-circle-o"></i> <a href="#">{{post.owner}}</a>
@@ -106,12 +108,21 @@
             "Content-Type": "multipart/form-data",
           }
         })
-    },
-    formatDate(value){
-        if(value){
-          return moment(String(value)).format('MMMM DD, YYYY')
-        }
-      }
+      },
+      getBlogDetail(post_detail_id){
+        axios.get(`blog-detail/${post_detail_id}/`)
+          .then((response)=>{
+            console.log('Returned Detailed Post ', response.data)
+          })
+          .catch((err)=>{
+            console.log('Not found post ', err);
+          })
+      },
+      formatDate(value){
+          if(value){
+            return moment(String(value)).format('MMMM DD, YYYY')
+          }
+      },
     },
     created(){
         this.getAllPosts()

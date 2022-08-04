@@ -28,6 +28,11 @@ class BlogListCreateView(generics.ListCreateAPIView):
                 return HttpResponse('Ugurlu bir post reqeust vue terefinden hemde cookie')
                 #profile = Profile.objects.get(user=self.request.user)
                 #serializer.save(owner=profile)
+                
+#!BlogDetailView
+class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
 
 #!CategoryListCreateView
 class CategoryBlogListCreateView(generics.ListCreateAPIView):
