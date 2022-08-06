@@ -1,6 +1,11 @@
+import json
 from re import S
 from django.db import models
 from django.utils.text import slugify
+from django.http import JsonResponse
+import django
+import json
+from json import JSONEncoder
 
 from user_profile.models import *
 from django.core.validators import FileExtensionValidator
@@ -43,9 +48,8 @@ class Blog(models.Model):
         super(Blog,self).save(*args,**kwargs)
     
     #Bura get_absolute_url(self): elave edersen sonra single postlar ucun
-    @property
     def get_absolute_url(self):
-        return f"blog/{self.id}/"
+        return f"blog-detail/{self.id}/"
     
     class Meta:
         ordering = ['-created']
@@ -60,6 +64,7 @@ class CommentBlog(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
     
+
     def __str__(self):
         return f"Comments To - {self.blog.title}"
     

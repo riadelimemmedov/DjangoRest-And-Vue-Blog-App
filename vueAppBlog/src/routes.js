@@ -18,7 +18,7 @@ export default new Router({
     {path:'/',component:Home,name:'home'},
     {path:'/sign-up',component:Signup,name:'sign-up'},
     {path:'/login',component:Login,name:'login'},
-    {path:'/detail',component:PostDetail,name:'detail'}
+    {path:'/detail-blog/:id',component:PostDetail,name:'detail-blog'}
   ]
 })
 

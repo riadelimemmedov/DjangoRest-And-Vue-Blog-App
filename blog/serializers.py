@@ -1,6 +1,4 @@
-from email.policy import default
 from rest_framework import serializers
-
 from .models import *
 
 #!BlogSerializer
@@ -13,8 +11,9 @@ class BlogSerializer(serializers.ModelSerializer):
     #blog_comments = serializers.PrimaryKeyRelatedField(read_only=True,many=True)
     class Meta:
         model = Blog
-        fields = ['id','title','body','owner','blog_image','slug','created','updated','category','blog_comments','liked','current_user']
+        fields = ['id','title','body','owner','blog_image','slug','created','updated','category','blog_comments','liked','current_user','get_absolute_url']
 
+    
 #!CategorySerializers
 class CategoryBlogSerializer(serializers.ModelSerializer):
     #owner = serializers.CharField(source='owner.user',read_only=True)
@@ -27,8 +26,8 @@ class CategoryBlogSerializer(serializers.ModelSerializer):
 
 #!CommentSerializer 
 class CommentSerializer(serializers.ModelSerializer):
-    owner = serializers.CharField(source='profile.user',read_only=True)
-    
+    owner = serializers.CharField(source='owner.user',read_only=True)
+
     class Meta:
         model = CommentBlog
         fields = ['id','body','owner','blog']

@@ -11,9 +11,14 @@
             <div class="vtimeline-block">
                 <span class="vtimeline-date">{{formatDate(post.created)}}</span><div class="vtimeline-content">
                     <a href="#"><img :src="post.blog_image" alt="" class="img-fluid mb20" style="width:700px;height:700px"></a>
-                    
-                    <a href="" @click.prevent="getBlogDetail(post.id)"><h3>{{post.title}}</h3></a>
-                    
+
+                    <router-link :to="{name:'detail-blog',params:{id:post.id}}">
+                      <h3>{{post.title}}</h3>
+                    </router-link>
+
+                    {{post.get_absolute_url}}
+                    <a href="http://127.0.0.1:8000/blog-detail/21/">ddd</a>
+
                     <ul class="post-meta list-inline">
                         <li class="list-inline-item">
                             <i class="fa fa-user-circle-o"></i> <a href="#">{{post.owner}}</a>
@@ -108,15 +113,6 @@
             "Content-Type": "multipart/form-data",
           }
         })
-      },
-      getBlogDetail(post_detail_id){
-        axios.get(`blog-detail/${post_detail_id}/`)
-          .then((response)=>{
-            console.log('Returned Detailed Post ', response.data)
-          })
-          .catch((err)=>{
-            console.log('Not found post ', err);
-          })
       },
       formatDate(value){
           if(value){
