@@ -2,10 +2,9 @@ import json
 from re import S
 from django.db import models
 from django.utils.text import slugify
-from django.http import JsonResponse
-import django
-import json
-from json import JSONEncoder
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+
 
 from user_profile.models import *
 from django.core.validators import FileExtensionValidator
@@ -50,6 +49,8 @@ class Blog(models.Model):
     #Bura get_absolute_url(self): elave edersen sonra single postlar ucun
     def get_absolute_url(self):
         return f"blog-detail/{self.id}/"
+    
+    
     
     class Meta:
         ordering = ['-created']

@@ -36,7 +36,7 @@
             <h5 class="card-header">Leave a Comment:</h5>
             <div class="card-body">
               <!-- !Comment Form -->
-                <form @submit.prevent="createComment()" method="POST">
+                <form @submit.prevent="createComment" method="POST">
                     <div class="form-group">
                         <textarea class="form-control" rows="3"></textarea>
                     </div>
@@ -126,13 +126,14 @@
             })
         },
         createComment(){
-          axios.post({
-            methos:'POST',
+          axios({
+            method:'POST',
             url:'comment-blogs/',
             data:{
               "csrfmiddlewaretoken":this.token,
               "body":'Great .net post',
-              "blog_id":this.$route.params.id
+              "blog_id":this.$route.params.id,
+              "user_token":window.localStorage.getItem('token')
             },
             headers:{
               "Content-Type": "multipart/form-data",
@@ -142,6 +143,7 @@
             console.log('Successfully Send Comment')
           })
           .catch((err)=>{
+            console.log(err)
             console.log('Err Comment Send')
           })
         }
