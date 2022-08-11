@@ -17,17 +17,15 @@
 
         <!-- Preview Image -->
         <div v-if="post.blog_image">
-          <img class="img-fluid rounded w-100 mb-4" :src="post.blog_image" alt="">
+          <img class="img-fluid rounded w-100 mb-4" :src="`http://127.0.0.1:8000${post.blog_image}`" alt="not found picture">
         </div>
 
         <div v-else>
           <h1 class="text-muted">Not Found Picture</h1>
         </div>
 
-
-
         <!-- Post Content -->
-        <p class="lead">{{post.body}}</p>
+        <p class="lead">{{post.commentserialize}}</p>
 
         <hr>
 
@@ -47,47 +45,14 @@
 
         <!-- Single Comment -->
 
-        <div class="media mb-4">
-            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+        <div class="media mb-4" v-for="comment in comments" :key="comment.id">
             <div class="media-body">
-                <h5 class="mt-0">Commenter Name</h5>
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus
-                odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate
-                fringilla. Donec lacinia congue felis in faucibus.
+                <h5 class="mt-0">{{comment.owner}}</h5>
+                {{comment.body}}
+                <hr>
             </div>
         </div>
 
-        <!-- Comment with nested comments -->
-        <div class="media mb-4">
-            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-            <div class="media-body">
-                <h5 class="mt-0">Commenter Name</h5>
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus
-                odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate
-                fringilla. Donec lacinia congue felis in faucibus.
-
-                <div class="media mt-4">
-                    <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                    <div class="media-body">
-                        <h5 class="mt-0">Commenter Name</h5>
-                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras
-                        purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi
-                        vulputate fringilla. Donec lacinia congue felis in faucibus.
-                    </div>
-                </div>
-
-                <div class="media mt-4">
-                    <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                    <div class="media-body">
-                        <h5 class="mt-0">Commenter Name</h5>
-                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras
-                        purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi
-                        vulputate fringilla. Donec lacinia congue felis in faucibus.
-                    </div>
-                </div>
-
-            </div>
-        </div>
 
     </div>
 
@@ -102,6 +67,7 @@
     data(){
       return{
         post:[],
+        comments:[],
         token:''
       }
     },
@@ -111,8 +77,10 @@
           console.log('Post Detail Id ', post_detail_id)
           axios.get(`blog-detail/${post_detail_id}/`)
             .then((response)=>{
-              this.post = response.data
+              this.post = response.data.serializer
+              this.comments = response.data.commentserialize
               console.log('Returned Detailed Post ', response.data)
+              console.log('Each post comment serializer list data ', this.comments)
             })
             .catch((err)=>{
               console.log('Not found post ', err);
@@ -126,14 +94,15 @@
             })
         },
         createComment(){
+          console.log('user id' ,this.$store.state.token)
           axios({
             method:'POST',
             url:'comment-blogs/',
             data:{
               "csrfmiddlewaretoken":this.token,
-              "body":'Great .net post',
-              "blog_id":this.$route.params.id,
-              "user_token":window.localStorage.getItem('token')
+              "body":'php bas programmin language',
+              "blog":this.$route.params.id,
+              "token":this.$store.state.token
             },
             headers:{
               "Content-Type": "multipart/form-data",

@@ -14,5 +14,5 @@
 7)Logout Yaz amma alert filan yaz bax ne kitabxana tapirsan vue ya gore+
 
 
-8)Comment Yazma Funksiyasini Yaz Islemir Cunki
-9)Login & Register & Logout yaz
+8)Comment Yazma Funksiyasini Yaz Islemir Cunki => yazilib tam duzelmeyib onu tamala vue js terefini v-modeller filan vermilsendeki inputdan girilen data gonderilsin ona gore
+9)Login & Register & Logout yaz+

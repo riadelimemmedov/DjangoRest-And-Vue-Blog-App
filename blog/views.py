@@ -45,9 +45,15 @@ class BlogDetailView(views.APIView):
             print('Err')
 
     def get(self,request,pk,format=None):
+        user = Token.objects.get(key='1d6b91bee50efa3f158f3f6b4d0ab218f26ab089').user
+        comments = CommentBlog.objects.filter(blog_id=pk)
+        print('Comment lIST HER BLOG ', comments)
         blog = self.get_object(pk)
-        serializer = BlogSerializer(blog,context={'current_user':request.user})
-        return Response(serializer.data)
+        serializer = BlogSerializer(blog)
+        commentserializer = CommentSerializer(comments,many=True)
+        print(commentserializer)
+        print('Serialize commenrt serializer ' , commentserializer.data)
+        return Response({'serializer':serializer.data,'commentserialize':commentserializer.data})
         
 #!CategoryListCreateView
 
@@ -57,11 +63,11 @@ class CategoryBlogListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     def perform_create(self,serializer):
+        print('Comment' , self.request.POST)
         profile = Profile.objects.get(user=self.request.user)
         serializer.save(owner=profile)
 
 #!CommentBlogListCreateView
-@method_decorator(csrf_exempt,name='dispatch')
 
 class CommentBlogListCreateView(generics.ListCreateAPIView):
     queryset = CommentBlog.objects.all()
@@ -71,9 +77,14 @@ class CommentBlogListCreateView(generics.ListCreateAPIView):
     def perform_create(self,serializer):
         # user_fuck = Token.objects.get(key=self.request.POST['user_token'])
         # print('blet', user_fuck)
+        print('Fuck isledi perform create commentde')
+        print(self.request.POST)
+        
         if self.request.method == 'POST':
+            user = Token.objects.get(key=self.request.POST.get('token')).user
+            print('User ', user)
             print('Axios Comment Data ', self.request.POST)
-            profile = Profile.objects.get(user=self.request.user)
+            profile = Profile.objects.get(user=user)
             serializer.save(owner=profile)
 
 #!CommentBlogDetail

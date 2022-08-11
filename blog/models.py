@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.text import slugify
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 
 from user_profile.models import *
@@ -58,17 +59,18 @@ class Blog(models.Model):
         verbose_name_plural = 'Blogs'
         
 #!CommentBlog
+def get_current_user(request):
+    return request.user         
 class CommentBlog(models.Model):
     body = models.TextField(blank=False)
     blog = models.ForeignKey(Blog,related_name='blog_comments',on_delete=models.CASCADE)
-    owner = models.ForeignKey(Profile,related_name='profile_comments',on_delete=models.CASCADE)
+    owner = models.ForeignKey(Profile,related_name='profile_comments',on_delete=models.CASCADE,default=get_user_model())
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
     
 
     def __str__(self):
         return f"Comments To - {self.blog.title}"
-    
     class Meta:
         ordering = ['-created']
         verbose_name = 'CommentBlog'
