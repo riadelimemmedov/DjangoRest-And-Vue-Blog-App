@@ -25,7 +25,7 @@
         </div>
 
         <!-- Post Content -->
-        <p class="lead">{{post.commentserialize}}</p>
+        <p class="lead">{{post.body}}</p>
 
         <hr>
 
@@ -36,7 +36,7 @@
               <!-- !Comment Form -->
                 <form @submit.prevent="createComment" method="POST">
                     <div class="form-group">
-                        <textarea class="form-control" rows="3"></textarea>
+                        <textarea class="form-control" rows="3" v-model="comment_text"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -53,9 +53,7 @@
             </div>
         </div>
 
-
     </div>
-
 
 </div>
 </template>
@@ -68,7 +66,8 @@
       return{
         post:[],
         comments:[],
-        token:''
+        token:'',
+        comment_text:''
       }
     },
     methods:{
@@ -100,7 +99,7 @@
             url:'comment-blogs/',
             data:{
               "csrfmiddlewaretoken":this.token,
-              "body":'php bas programmin language',
+              "body":this.comment_text,
               "blog":this.$route.params.id,
               "token":this.$store.state.token
             },
@@ -109,7 +108,7 @@
             }
           })
           .then((response)=>{
-            console.log('Successfully Send Comment')
+            this.comments.push(response.data)
           })
           .catch((err)=>{
             console.log(err)
@@ -120,6 +119,15 @@
     created(){
       this.getBlogDetail()
       this.postComment()
+    },
+    mounted(){
+      console.log('Mounted Work Post Detail')
+    },
+    watch:{
+      comments:function(){
+        console.log('Comment lIst Updated')
+        console.log(this.comments)
+      }
     }
   }
 </script>

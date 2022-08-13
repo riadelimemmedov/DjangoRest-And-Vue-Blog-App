@@ -9,15 +9,13 @@
                 <i class="fa fa-image"></i>
             </div>
             <div class="vtimeline-block">
+
                 <span class="vtimeline-date">{{formatDate(post.created)}}</span><div class="vtimeline-content">
-                    <a href="#"><img :src="post.blog_image" alt="" class="img-fluid mb20" style="width:700px;height:700px"></a>
+                    <a href="#"><img :src="`http://127.0.0.1:8000${post.blog_image}`" alt="" class="img-fluid mb20" style="width:700px;height:700px"></a>
 
                     <router-link :to="{name:'detail-blog',params:{id:post.id}}">
                       <h3>{{post.title}}</h3>
                     </router-link>
-
-                    {{post.get_absolute_url}}
-                    <a href="http://127.0.0.1:8000/blog-detail/21/">ddd</a>
 
                     <ul class="post-meta list-inline">
                         <li class="list-inline-item">
@@ -40,10 +38,25 @@
                       {{post.body.split(/[!,?,.]/,5).toString()}}...
                     </p><br>
                     <a href="#" class="btn btn-outline-dark btn-sm">Read More</a>
+
                     <form @submit.prevent="likeToPost($event)" method="POST" class="d-inline">
                       <input type="hidden" :value="post_id=post.id" name="blog_id">
                       <button id="like-button" class="btn-sm mx-auto text-center" enctype="multipart/form-data">
-                        <i class="fa fa-thumbs-up fa-2x" aria-hidden="true" style="color:#2e86de"></i>
+
+
+                      {{post.liked}},<br><br>
+
+                      <!-- Write your comments  -->
+                      <strong>Current User Logined User For {{current_user.username}}</strong>,<br><br>
+
+                      {{is_like}}
+
+                      <div>
+                        <span v-if="post.liked.includes(current_user)">
+                          <i class="fa fa-thumbs-down fa-2x" aria-hidden="true" style="color:#2e86de"></i>
+                        </span>
+                      </div>
+
                       </button>
                     </form>
                 </div>
@@ -76,7 +89,10 @@
       return {
         posts: [],
         pageOfItems:[],
-        post_id:null
+        post_id:null,
+        current_user:'',
+        blog_users_like:[],
+        is_like:false,
       }
     },
     components:{
@@ -90,10 +106,14 @@
         console.log('Hal Hazirdaki Paginationdaki Postlar ', this.pageOfItems)
       },
       getAllPosts(){
-        axios.get('/')
+        axios.get('/',{
+          params:{'user_token':this.$store.state.token}
+        })
           .then((response)=>{
-            this.posts=response.data
-            console.log(response.data)
+            this.posts=response.data.serializer_data
+            console.log('Posts', response.data.serializer_data)
+            console.log('Current User ', response.data.current_user)
+            this.current_user = response.data.current_user != null ? response.data.current_user : false
           })
       },
       likeToPost(e){

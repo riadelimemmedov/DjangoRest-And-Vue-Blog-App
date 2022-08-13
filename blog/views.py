@@ -21,9 +21,23 @@ from user_profile.serializers import *
 
 #!BlogListCreateView
 @method_decorator(csrf_exempt,name='dispatch')
-class BlogListCreateView(generics.ListCreateAPIView):
-    queryset = Blog.objects.all().order_by('-created')
-    serializer_class = BlogSerializer
+class BlogListCreateView(views.APIView):
+    def get(self,request):
+        blogs = Blog.objects.all().order_by('-created')
+        serializer = BlogSerializer(blogs,many=True)
+        
+        current_user = ''
+        usertoken = self.request.GET['user_token']
+        if usertoken:
+            current_user = Token.objects.get(key=usertoken).user
+            profile_serializer = UserSerilizers(current_user)
+            print(' User Serializer ', profile_serializer.data)
+            print('IF isledi ve blog ve userlar geri dondu response ile')
+            return Response({'serializer_data':serializer.data,'current_user':profile_serializer.data},status=status.HTTP_200_OK)
+        else:
+            print('Ancag postlar geri dondu cunki user giris etmeyib')
+            return Response({'serializer_data':serializer.data},status=status.HTTP_200_OK)
+
 
     def perform_create(self,serializer):
             if self.request.method == 'POST':

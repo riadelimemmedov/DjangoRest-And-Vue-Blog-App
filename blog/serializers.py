@@ -1,10 +1,12 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from .models import *
 
 #!BlogSerializer
 class BlogSerializer(serializers.ModelSerializer):
     owner = serializers.CharField(source='owner.user',read_only=True)
     liked = serializers.StringRelatedField(read_only=True,many=True)
+    currentuser = serializers.CharField(source='currentuser.username',read_only=True)
     # user = serializers.SerializerMethodField(method_name='get_current_user')
     #user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     #current_user = serializers.StringRelatedField(read_only=True,default=serializers.CurrentUserDefault())   
@@ -20,7 +22,7 @@ class BlogSerializer(serializers.ModelSerializer):
         
     class Meta:
         model = Blog
-        fields = ['id','title','body','owner','blog_image','slug','created','updated','category','blog_comments','liked']
+        fields = ['id','title','body','owner','blog_image','slug','created','updated','category','blog_comments','liked','currentuser']
 
 
     
@@ -42,3 +44,8 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentBlog
         fields = ['body','blog','owner']
+        
+class UserSerilizers(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username']

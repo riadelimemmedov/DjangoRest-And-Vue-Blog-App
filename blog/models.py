@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.text import slugify
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.contrib.auth import get_user_model
 
 
@@ -36,6 +37,7 @@ class Blog(models.Model):
     blog_image = models.ImageField(upload_to='blogpicture',validators=[FileExtensionValidator(['png','jpg','jpeg'])],blank=True,null=True)
     category = models.ForeignKey(CategoryBlog,related_name='category_post',on_delete=models.CASCADE,blank=True,null=True)
     liked = models.ManyToManyField(Profile,default=None,blank=True,related_name='liked')
+    currentuser = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='currentuser',on_delete=models.CASCADE)
     slug = models.SlugField(unique=True,db_index=True,blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
