@@ -36,7 +36,7 @@ class Blog(models.Model):
     owner = models.ForeignKey(Profile,related_name='posts',on_delete=models.CASCADE)
     blog_image = models.ImageField(upload_to='blogpicture',validators=[FileExtensionValidator(['png','jpg','jpeg'])],blank=True,null=True)
     category = models.ForeignKey(CategoryBlog,related_name='category_post',on_delete=models.CASCADE,blank=True,null=True)
-    liked = models.ManyToManyField(Profile,default=None,blank=True,related_name='liked')
+    liked = models.ManyToManyField(User,default=None,blank=True,related_name='liked')
     currentuser = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='currentuser',on_delete=models.CASCADE)
     slug = models.SlugField(unique=True,db_index=True,blank=True)
     updated = models.DateTimeField(auto_now=True)
@@ -52,8 +52,9 @@ class Blog(models.Model):
     #Bura get_absolute_url(self): elave edersen sonra single postlar ucun
     def get_absolute_url(self):
         return f"blog-detail/{self.id}/"
-    
-    
+
+
+    #!Burda her bloga gore likelarin sayini donduren kodu yaz
     
     class Meta:
         ordering = ['-created']
@@ -85,7 +86,7 @@ LIKE_CHOICES = (
     ('Unlike','Unlike'),
 )
 class Like(models.Model):
-    profile = models.ForeignKey(Profile,related_name='profile_like',on_delete=models.CASCADE)
+    user = models.ForeignKey(User,related_name='profile_like',on_delete=models.CASCADE)
     post = models.ForeignKey(Blog,related_name='blog_like',on_delete=models.CASCADE)
     value = models.CharField(max_length=100,choices=LIKE_CHOICES,default='Like')
     

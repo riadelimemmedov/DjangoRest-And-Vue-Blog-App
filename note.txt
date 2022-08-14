@@ -16,3 +16,4 @@
 
 8)Comment Yazma Funksiyasini Yaz Islemir Cunki => yazilib tam duzelmeyib onu tamala vue js terefini v-modeller filan vermilsendeki inputdan girilen data gonderilsin ona gore
 9)Login & Register & Logout yaz+
+10)Like unline temasini reactive et vue js de amma vue icinde js yazmagla et cunku cox kod gedecek vue da buna gore,sadece responseden donen deyeri goturub hemin deyere uygun class adini reactiv sekilde deyismeliyik

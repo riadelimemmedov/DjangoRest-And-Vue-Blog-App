@@ -22,12 +22,13 @@ from user_profile.serializers import *
 #!BlogListCreateView
 @method_decorator(csrf_exempt,name='dispatch')
 class BlogListCreateView(views.APIView):
-    def get(self,request):
+    def get(self,request,format=None):
         blogs = Blog.objects.all().order_by('-created')
         serializer = BlogSerializer(blogs,many=True)
         
         current_user = ''
-        usertoken = self.request.GET['user_token']
+        usertoken = self.request.GET.get('user_token')
+        print('User Token Value ', usertoken)
         if usertoken:
             current_user = Token.objects.get(key=usertoken).user
             profile_serializer = UserSerilizers(current_user)
@@ -39,10 +40,35 @@ class BlogListCreateView(views.APIView):
             return Response({'serializer_data':serializer.data},status=status.HTTP_200_OK)
 
 
-    def perform_create(self,serializer):
-            if self.request.method == 'POST':
-                print(self.request.POST)
+    def post(self,request,format=None):
+            if self.request.method == 'POST' and self.request.POST.get('user_token') != '':
+                #?Header Token Value
                 header_token = self.request.META.get('HTTP_AUTHORIZATION', None)
+                
+                #?Liked Post Data For Liked Blog Post
+                current_user = Token.objects.get(key=self.request.POST.get('user_token')).user
+                liked_user = User.objects.get(username=current_user)
+                print('Current User Model ', liked_user)
+                blog_obj = Blog.objects.get(id=self.request.POST.get('blog_id'))
+                
+                if current_user in blog_obj.liked.all():
+                      print('Unlike Blog')
+                      blog_obj.liked.remove(current_user)
+                else:
+                      print('Like Blog')
+                      blog_obj.liked.add(current_user)
+                
+                like,created = Like.objects.get_or_create(user=current_user,post=blog_obj)
+                
+                if not created:
+                    print('Created Value ', created)
+                    print('If created value when is true Like object not exists before crt')
+                    if like.value == 'Like':
+                        like.value = 'Unlike'
+                    else:
+                        like.value = 'Like'
+                like.save()
+                
                 print('Header Token ', header_token)
                 print('Vue terefden axiosdan POST request geldi yoxlama ucun')
                 print('Method Value ', self.request.method)

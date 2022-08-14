@@ -47,13 +47,16 @@
                       {{post.liked}},<br><br>
 
                       <!-- Write your comments  -->
-                      <strong>Current User Logined User For {{current_user.username}}</strong>,<br><br>
+                      <strong>Current User Logined User For {{current_user}}</strong>,<br><br>
 
                       {{is_like}}
 
                       <div>
-                        <span v-if="post.liked.includes(current_user)">
+                        <span v-if="post.liked.includes(current_user.username) && current_user.username != null">
                           <i class="fa fa-thumbs-down fa-2x" aria-hidden="true" style="color:#2e86de"></i>
+                        </span>
+                        <span v-else>
+                          <i class="fa fa-thumbs-up fa-2x" aria-hidden="true" style="color:#2e86de"></i>
                         </span>
                       </div>
 
@@ -126,8 +129,8 @@
           url:'/',
           data:{
             'csrfmiddlewaretoken':csrf,
-            "title":"Hello",
-            "body":"Python",
+            "blog_id":blog_id,
+            "user_token":this.$store.state.token
           },
           headers:{
             "Content-Type": "multipart/form-data",
