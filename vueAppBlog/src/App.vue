@@ -17,7 +17,8 @@
   export default {
     data () {
       return {
-        token:''
+        token:'',
+        allPosts:[]
       }
     },
     components:{
@@ -38,6 +39,9 @@
         axios.defaults.headers.common['Authorization'] = ''
       }
     },
+    mounted(){
+      console.log('all posts return vuex state ', this.$store.state.allPosts)
+    }
 }
 </script>
 

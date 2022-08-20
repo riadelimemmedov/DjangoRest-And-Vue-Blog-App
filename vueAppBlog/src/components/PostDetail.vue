@@ -109,6 +109,7 @@
           })
           .then((response)=>{
             this.comments.push(response.data)
+            this.comment_text = ''
           })
           .catch((err)=>{
             console.log(err)

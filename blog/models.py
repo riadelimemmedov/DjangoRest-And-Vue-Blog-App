@@ -37,6 +37,7 @@ class Blog(models.Model):
     blog_image = models.ImageField(upload_to='blogpicture',validators=[FileExtensionValidator(['png','jpg','jpeg'])],blank=True,null=True)
     category = models.ForeignKey(CategoryBlog,related_name='category_post',on_delete=models.CASCADE,blank=True,null=True)
     liked = models.ManyToManyField(User,default=None,blank=True,related_name='liked')
+    is_liked = models.BooleanField(default=False)
     currentuser = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='currentuser',on_delete=models.CASCADE)
     slug = models.SlugField(unique=True,db_index=True,blank=True)
     updated = models.DateTimeField(auto_now=True)
@@ -88,6 +89,7 @@ LIKE_CHOICES = (
 class Like(models.Model):
     user = models.ForeignKey(User,related_name='profile_like',on_delete=models.CASCADE)
     post = models.ForeignKey(Blog,related_name='blog_like',on_delete=models.CASCADE)
+    is_user_liked = models.BooleanField(default=False)
     value = models.CharField(max_length=100,choices=LIKE_CHOICES,default='Like')
     
     def __str__(self):

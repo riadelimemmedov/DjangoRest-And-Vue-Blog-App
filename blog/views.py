@@ -27,13 +27,15 @@ class BlogListCreateView(views.APIView):
         serializer = BlogSerializer(blogs,many=True)
         
         current_user = ''
+        liked = None
         usertoken = self.request.GET.get('user_token')
         print('User Token Value ', usertoken)
         if usertoken:
             current_user = Token.objects.get(key=usertoken).user
             profile_serializer = UserSerilizers(current_user)
-            print(' User Serializer ', profile_serializer.data)
-            print('IF isledi ve blog ve userlar geri dondu response ile')
+            
+            # print(' User Serializer ', profile_serializer.data)
+            # print('IF isledi ve blog ve userlar geri dondu response ile')
             return Response({'serializer_data':serializer.data,'current_user':profile_serializer.data},status=status.HTTP_200_OK)
         else:
             print('Ancag postlar geri dondu cunki user giris etmeyib')
@@ -50,14 +52,22 @@ class BlogListCreateView(views.APIView):
                 liked_user = User.objects.get(username=current_user)
                 print('Current User Model ', liked_user)
                 blog_obj = Blog.objects.get(id=self.request.POST.get('blog_id'))
+                blog_serializer = BlogSerializer(blog_obj)
+                
                 
                 if current_user in blog_obj.liked.all():
-                      print('Unlike Blog')
-                      blog_obj.liked.remove(current_user)
+                    print('Unlike Blog')
+                    blog_obj.is_liked = False
+                    #likes['is_user_liked'] = False
+                    blog_obj.liked.remove(current_user)
+                    blog_obj.save()
                 else:
-                      print('Like Blog')
-                      blog_obj.liked.add(current_user)
-                
+                    print('Like Blog')
+                    blog_obj.is_liked = True
+                    #likes['is_user_liked'] = True
+                    blog_obj.liked.add(current_user)
+                    blog_obj.save()
+                    
                 like,created = Like.objects.get_or_create(user=current_user,post=blog_obj)
                 
                 if not created:
@@ -65,13 +75,18 @@ class BlogListCreateView(views.APIView):
                     print('If created value when is true Like object not exists before crt')
                     if like.value == 'Like':
                         like.value = 'Unlike'
+                        like.is_user_liked = True
                     else:
                         like.value = 'Like'
+                        like.is_user_liked = False
+                        
+                print('Before save like value data ', like.value)
                 like.save()
+                return Response({'like_is_user_liked':like.is_user_liked,'blog_obj':blog_serializer.data})
                 
-                print('Header Token ', header_token)
-                print('Vue terefden axiosdan POST request geldi yoxlama ucun')
-                print('Method Value ', self.request.method)
+                # print('Header Token ', header_token)
+                # print('Vue terefden axiosdan POST request geldi yoxlama ucun')
+                # print('Method Value ', self.request.method)
                 return HttpResponse('Ugurlu bir post reqeust vue terefinden hemde cookie')
                 #profile = Profile.objects.get(user=self.request.user)
                 #serializer.save(owner=profile)

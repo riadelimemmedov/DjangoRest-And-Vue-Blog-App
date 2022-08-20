@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   state:{
     paginationPost:[],
+    allPosts:[],
     isAuthenticated:false,
     token:''
   },
@@ -18,6 +19,9 @@ export const store = new Vuex.Store({
   mutations:{
     renderPaginationPost(state,paginatepost){
       state.paginationPost = paginatepost
+    },
+    renderAllPosts(state,posts){
+      state.allPosts = posts
     },
     initializeStorage(state){
       if(window.localStorage.getItem('token')){

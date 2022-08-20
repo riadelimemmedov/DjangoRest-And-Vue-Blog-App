@@ -31,7 +31,7 @@
                           <i class="fa fa-comment" aria-hidden="true"> {{post.blog_comments.length}}</i>
                         </li>
                         <li class="list-inline-item">
-                          <i class="fa fa-thumbs-o-up" aria-hidden="true"></i><!-- Like modelini yazandan sonra goster burda her posta gelen like sayini -->
+                          <i class="fa fa-thumbs-o-up" aria-hidden="true">&nbsp;{{post.liked.length}}</i><!-- Like modelini yazandan sonra goster burda her posta gelen like sayini -->
                         </li>
                     </ul>
                     <p>
@@ -39,28 +39,30 @@
                     </p><br>
                     <a href="#" class="btn btn-outline-dark btn-sm">Read More</a>
 
+                    <!-- Liked Blog Value - {{liked_blog_value}},
+                    Post liked - {{post.is_liked}}<hr>
+                    Includes User Liked - {{post.liked.includes(current_user.username)}}
+                    <hr>
+
+                          fuck {{likedPostValue}}
+
+                    liked length each posts  - {{post.liked.length}} -->
+
                     <form @submit.prevent="likeToPost($event)" method="POST" class="d-inline">
                       <input type="hidden" :value="post_id=post.id" name="blog_id">
-                      <button id="like-button" class="btn-sm mx-auto text-center" enctype="multipart/form-data">
 
+                      <div v-if="current_user.username != null" class="mx-auto text-left float-right" style="padding-right:250px !important">
 
-                      {{post.liked}},<br><br>
+                          <button v-if="post.liked.includes(current_user.username)==true" id="like-button" class="btn-sm mx-auto" type="submit">
+                              <i class="fa fa-thumbs-down fa-2x" aria-hidden="true" style="color:#2e86de"></i>
+                          </button>
 
-                      <!-- Write your comments  -->
-                      <strong>Current User Logined User For {{current_user}}</strong>,<br><br>
-
-                      {{is_like}}
-
-                      <div>
-                        <span v-if="post.liked.includes(current_user.username) && current_user.username != null">
-                          <i class="fa fa-thumbs-down fa-2x" aria-hidden="true" style="color:#2e86de"></i>
-                        </span>
-                        <span v-else>
-                          <i class="fa fa-thumbs-up fa-2x" aria-hidden="true" style="color:#2e86de"></i>
-                        </span>
+                          <button v-else-if="post.liked.includes(current_user.username)==false" id="like-button" class="btn-sm mx-auto" type="submit">
+                              <i class="fa fa-thumbs-up fa-2x" aria-hidden="true" style="color:#2e86de"></i>
+                          </button>
                       </div>
 
-                      </button>
+
                     </form>
                 </div>
             </div>
@@ -94,8 +96,9 @@
         pageOfItems:[],
         post_id:null,
         current_user:'',
+        liked_blog_value : null,
         blog_users_like:[],
-        is_like:false,
+        liked_post:'',
       }
     },
     components:{
@@ -117,6 +120,7 @@
             console.log('Posts', response.data.serializer_data)
             console.log('Current User ', response.data.current_user)
             this.current_user = response.data.current_user != null ? response.data.current_user : false
+            this.$store.commit('renderAllPosts',this.posts)
           })
       },
       likeToPost(e){
@@ -136,12 +140,28 @@
             "Content-Type": "multipart/form-data",
           }
         })
+          .then((response) =>{
+            console.log('Returned Response Value ', response.data)
+            console.log('Like or Unlike Value ', response.data.like_value)
+            console.log('liked blog detail', response.data.blog_obj)
+            this.like_value = response.data.like_value
+            this.liked_blog_value = response.data.blog_obj.is_liked
+            this.liked_post = response.data.blog_obj
+            this.getAllPosts()
+          })
       },
+
       formatDate(value){
           if(value){
             return moment(String(value)).format('MMMM DD, YYYY')
           }
       },
+    },
+    computed:{
+      likedPostValue(){
+        this.getAllPosts()
+        return this.liked_blog_value
+      }
     },
     created(){
         this.getAllPosts()

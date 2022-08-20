@@ -16,9 +16,11 @@
         </li>
       </ul>
 
-      <form class="form-inline my-2 my-lg-0">
+    <button @click.prevent="filteredPosts()">filter post </button>
 
+      <form class="form-inline my-2 my-lg-0" @submit.prevent="getStatePosts">
         <template v-if="token_value">
+        
 
           <span class="nav-item">
               <a class="nav-link" @click="logOut" style="cursor:pointer">Log Out</a>
@@ -36,7 +38,7 @@
             </span>
         </template>
 
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <input class="form-control mr-sm-2" v-model="searched_post_text" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form>
     </div>
@@ -48,12 +50,14 @@
 
   export default{
     props:{
-      token_value:''
+      token_value:'',
     },
     data(){
       return{
         isLoggedIn:false,
-        authenticatedToken:this.token_value
+        authenticatedToken:this.token_value,
+        allPosts:[],
+        searched_post_text:''
       }
     },
     methods:{
@@ -86,17 +90,27 @@
             )
           }
       })
+      },
+      getStatePosts(){
+        this.allPosts = this.$store.state.allPosts
+        console.log(this.allPosts)
+      },
+      filteredPosts(){
+        return this.allPosts.filter((post)=>{
+          console.log('Each post vuex state post ', post)
+            post.title.toLowerCase().includes(this.searched_post_text.toLowerCase())
+        })
+      }
 
-    },
-    created(){
-      const token = this.$store.state.token ? true : false
-      console.log('isLoggedIn value before token ', this.isLoggedIn)
-      console.log('token', token);
-      this.isLoggedIn = token
-      console.log('After token islogged in', this.isLoggedIn)
-    },
 
-  }
+  },
+  created(){
+    const token = this.$store.state.token ? true : false
+    console.log('isLoggedIn value before token ', this.isLoggedIn)
+    console.log('token', token);
+    this.isLoggedIn = token
+    console.log('After token islogged in', this.isLoggedIn)
+  },
 
 
 }
