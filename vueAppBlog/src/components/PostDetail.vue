@@ -30,7 +30,7 @@
         <hr>
 
         <!-- Comments Form -->
-        <div class="card my-4">
+        <div class="card my-4" v-if="userIsAuthenticated">
             <h5 class="card-header">Leave a Comment:</h5>
             <div class="card-body">
               <!-- !Comment Form -->
@@ -65,6 +65,7 @@
     data(){
       return{
         post:[],
+        userIsAuthenticated:false,
         comments:[],
         token:'',
         comment_text:''
@@ -120,6 +121,7 @@
     created(){
       this.getBlogDetail()
       this.postComment()
+      this.userIsAuthenticated = this.$store.state.isAuthenticated
     },
     mounted(){
       console.log('Mounted Work Post Detail')

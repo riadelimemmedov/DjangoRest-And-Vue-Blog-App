@@ -1,13 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from "vuex-persistedstate";
 
 //!Utilize Vuex This Vue App
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
+  plugins: [createPersistedState()],
   state:{
     paginationPost:[],
     allPosts:[],
+    searchResults:null,
     isAuthenticated:false,
     token:''
   },
@@ -32,6 +35,9 @@ export const store = new Vuex.Store({
         state.token = ''
         state.isAuthenticated = false
       }
+    },
+    renderSearchResult(state,result_posts){
+      state.searchResults=result_posts
     },
     setToken(state,token){
       state.token=token

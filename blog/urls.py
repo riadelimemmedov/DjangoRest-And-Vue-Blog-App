@@ -9,7 +9,8 @@ urlpatterns = [
     path('category-blogs/',CategoryBlogListCreateView.as_view(),name='CategoryListCreateView'),
     path('comment-blogs/',CommentBlogListCreateView.as_view(),name='CommentBlogListCreateView'),
     path('comment-blog/<int:pk>/',CommentBlogDetail.as_view(),name='CommentBlogDetail'),
-
+    path('search-blog/',searchBlogView,name='searchBlogView'),
+    
     path('get-token/',get_csrf_token)
 ]
 

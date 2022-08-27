@@ -8,6 +8,7 @@ import router from './routes.js'
 import { store } from './store/store.js'
 import Vuelidate from 'vuelidate'
 import VueSweetalert2 from 'vue-sweetalert2'
+import VueCookies from 'vue-cookies'
 import 'sweetalert2/dist/sweetalert2.min.css'
 
 //!Utilize VueSweetalert2
@@ -22,10 +23,13 @@ Vue.use(Vuelidate)
 //!Utilize JwPagination
 Vue.component('jw-pagination',JwPagination)
 
+//!Utilize VueCokkies
+Vue.use(VueCookies,{expire:'1s'})
+
 //!Utilize Axios
 axios.defaults.baseURL='http://127.0.0.1:8000/'
-axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+axios.defaults.xsrfCookieName = "csrftoken"
 
 new Vue({
   el: '#app',

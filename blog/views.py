@@ -1,5 +1,5 @@
 import django
-from django.shortcuts import render,get_object_or_404,HttpResponse
+from django.shortcuts import render,get_object_or_404
 from requests import Response
 from rest_framework import generics,views,response,status,permissions,viewsets
 from rest_framework.response import Response
@@ -9,8 +9,10 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt,ensure_csrf_cookie
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from rest_framework.authtoken.models import Token
+import json
+from django.db.models import Q
 
 from .models import *
 from .serializers import *
@@ -154,3 +156,21 @@ def get_csrf_token(request):
     token = django.middleware.csrf.get_token(request)
     return JsonResponse({'token': token})
 
+@csrf_exempt
+def searchBlogView(request):
+    result = get_csrf_token(request)
+    csrfmiddlewaretoken_django = json.loads(result.getvalue())['token']
+    print('noldu amk burda')
+    if request.method == 'POST' and result and csrfmiddlewaretoken_django !='':
+        request_values = [i for i in request.POST]
+        request_value = json.loads(request_values[0])
+        csrfmiddlewaretoken_vuejs = request_value['csrfmiddlewaretoken']
+        searched_post_text = request_value['searched_post_text']
+        if searched_post_text != '':
+            find_blog = Blog.objects.filter(title__icontains=searched_post_text)
+            serializer_find_blog = BlogSerializer(find_blog,many=True)
+            print('Serializer find blog  ', type(serializer_find_blog.data))
+        return JsonResponse({'find_blog':serializer_find_blog.data},safe=True)
+    
+    return HttpResponse('neyse axi get de isledi')
+    

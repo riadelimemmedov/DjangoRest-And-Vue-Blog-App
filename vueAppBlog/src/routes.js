@@ -7,6 +7,7 @@ import Home from './components/Home.vue'
 import Signup from './components/Signup.vue'
 import Login from './components/Login.vue'
 import PostDetail from './components/PostDetail.vue'
+import SearhResult from './components/SearhResult.vue'
 
 //!Utilize VueRouter
 Vue.use(VueRouter)
@@ -18,7 +19,8 @@ export default new Router({
     {path:'/',component:Home,name:'home'},
     {path:'/sign-up',component:Signup,name:'sign-up'},
     {path:'/login',component:Login,name:'login'},
-    {path:'/detail-blog/:id',component:PostDetail,name:'detail-blog'}
+    {path:'/detail-blog/:id',component:PostDetail,name:'detail-blog'},
+    {path:'/search-result',component:SearhResult,name:'search-result'}
   ]
 })
 

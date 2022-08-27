@@ -37,7 +37,10 @@
                     <p>
                       {{post.body.split(/[!,?,.]/,5).toString()}}...
                     </p><br>
-                    <a href="#" class="btn btn-outline-dark btn-sm">Read More</a>
+
+                    <router-link tag="a" class="btn btn-outline-dark btn-sm" :to="{name:'detail-blog',params:{id:post.id}}">
+                        Read More
+                    </router-link>
 
                     <!-- Liked Blog Value - {{liked_blog_value}},
                     Post liked - {{post.is_liked}}<hr>
@@ -150,7 +153,6 @@
             this.getAllPosts()
           })
       },
-
       formatDate(value){
           if(value){
             return moment(String(value)).format('MMMM DD, YYYY')
