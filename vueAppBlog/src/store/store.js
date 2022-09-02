@@ -36,8 +36,8 @@ export const store = new Vuex.Store({
         state.isAuthenticated = false
       }
     },
-    renderSearchResult(state,result_posts){
-      state.searchResults=result_posts
+    renderSearchResult(state,{find_blog}){
+      state.searchResults=find_blog
     },
     setToken(state,token){
       state.token=token

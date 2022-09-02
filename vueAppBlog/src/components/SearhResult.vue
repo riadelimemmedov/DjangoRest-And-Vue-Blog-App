@@ -1,19 +1,21 @@
 <template>
     <div class="container">
       <div class="row">
-          <div class="col-sm-8 col-sm-offset-2 offset-2 mt-5">
-              <div class="row">
+          <div class="col-sm-8 col-sm-offset-2 offset-2 mt-5" v-for="searchResult in searchResults['find_blog']" :key="searchResult.id">
+                <div class="row">
                   <div class="col-sm-12">
                       <div class="panel panel-white post">
                           <div class="post-heading">
-                              <div class="pull-left image">
-                                  <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-circle avatar" alt="user profile image">
+                            <p>Profile writer owner - {{searchResult.owner}}</p>
+                            finding profile -  
+                              <div class="pull-left image" v-for="profile in searchResults['profile_serializer']" :key="profile.id">
+                                  <img v-if="searchResult.owner == profile.user" :src="`http://127.0.0.1:8000${profile.profile_picture}`" class="img-circle avatar" alt="user profile image">
                               </div>
                               <div class="pull-left meta">
                                   <div class="title h5">
-                                      <a href="#"><b>John Doe</b></a>
+                                      <a href="#"><b>{{searchResult.owner}}</b></a>
                                   </div>
-                                  <h6 class="text-muted time">5 seconds ago</h6>
+                                  <h6 class="text-muted time">{{searchResult.created}}</h6>
                               </div>
                           </div>
                           <div class="post-image">
@@ -35,17 +37,29 @@
                   </div>
               </div>
           </div>
-
       </div>
+
+      {{searchResults['find_blog']}}<br>
+      <hr>
+      {{searchResults['profile_serializer']}}
 </div>
 
 </template>
 
 <script>
   export default {
+    data(){
+      return{
+        searchResults:[]
+      }
+    },
     created(){
         console.log('what is this?')
-        console.log(this.$store.state.searchResults)
+        // console.log('History url ', window.history.back())//listed before clicked url at browser
+        this.searchResults = this.$store.state.searchResults
+    },
+    mounted(){
+      console.log('eeyyyyy bro what is this')
     }
   }
 </script>

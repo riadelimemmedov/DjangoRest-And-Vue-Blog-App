@@ -137,6 +137,7 @@
             url:'search-blog/',
             data:JSON.stringify({
               "csrfmiddlewaretoken" : this.$cookies.get('csrfmiddlewaretoken'),
+              "logged_user_token":this.$store.state.token,
               "searched_post_text":this.searched_post_text
             }),
             headers:{
@@ -144,12 +145,13 @@
             },
           })
           .then((response)=>{
-            console.log('response data neyse ', response.data)
-            this.$store.commit('renderSearchResult',response.data.find_blog)
-            let find_blog = response.data.find_blog
-            this.$router.push({name:'search-result'}).catch()
-            //that is rouer writing here,maybe fix bug,if router in sear-result url,not redirect again searh-result compojnent,if or not redirect to search-result ur
-            console.log('Navabr fuckkkkk')
+              let find_blog = response.data
+              let profile_serializer = response.data.profile_serializer
+              let renderSearchResult_Data = {...find_blog,...profile_serializer}
+              console.log('Render Search Data ', renderSearchResult_Data)
+              this.$store.commit('renderSearchResult',{find_blog})
+              window.location.href = ''
+              window.location.href = 'http://localhost:8080/search-result'
           })
         }
       },

@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/',include('djoser.urls')),
     path('api/v1/',include('djoser.urls.authtoken')),
-    path('',include('blog.urls',namespace='blog'))
+    path('',include('blog.urls',namespace='blog')),
+    path('',include('user_profile.urls',namespace='user_profile'))
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

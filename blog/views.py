@@ -169,8 +169,13 @@ def searchBlogView(request):
         if searched_post_text != '':
             find_blog = Blog.objects.filter(title__icontains=searched_post_text)
             serializer_find_blog = BlogSerializer(find_blog,many=True)
+            
+            
+            # user = Token.objects.get(key=request_value['logged_user_token']).user
+            profile = Profile.objects.all()
+            profile_serializer = ProfileSerializer(profile,many=True)
             print('Serializer find blog  ', type(serializer_find_blog.data))
-        return JsonResponse({'find_blog':serializer_find_blog.data},safe=True)
+        return JsonResponse({'find_blog':serializer_find_blog.data,'profile_serializer':profile_serializer.data},safe=True)
     
     return HttpResponse('neyse axi get de isledi')
     
