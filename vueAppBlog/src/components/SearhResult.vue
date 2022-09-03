@@ -1,49 +1,43 @@
 <template>
     <div class="container">
-      <div class="row">
-          <div class="col-sm-8 col-sm-offset-2 offset-2 mt-5" v-for="searchResult in searchResults['find_blog']" :key="searchResult.id">
-                <div class="row">
-                  <div class="col-sm-12">
-                      <div class="panel panel-white post">
-                          <div class="post-heading">
-                            <p>Profile writer owner - {{searchResult.owner}}</p>
-                            finding profile -  
-                              <div class="pull-left image" v-for="profile in searchResults['profile_serializer']" :key="profile.id">
-                                  <img v-if="searchResult.owner == profile.user" :src="`http://127.0.0.1:8000${profile.profile_picture}`" class="img-circle avatar" alt="user profile image">
-                              </div>
-                              <div class="pull-left meta">
-                                  <div class="title h5">
-                                      <a href="#"><b>{{searchResult.owner}}</b></a>
-                                  </div>
-                                  <h6 class="text-muted time">{{searchResult.created}}</h6>
-                              </div>
-                          </div>
-                          <div class="post-image">
-                              <img src=""><img src="https://via.placeholder.com/400x200" class="image" alt="image post">
-                          </div>
-                          <div class="post-description">
-                              <h4>Product Shoot</h4>
-                              <p>Here is a picture of the walkway to our product shoot.</p>
-                              <div class="stats">
-                                  <a href="javascript:void(0);" class="btn btn-default stat-item">
-                                      <i class="fa fa-thumbs-up icon"></i>228
-                                  </a>
-                                  <a href="javascript:void(0);" class="btn btn-default stat-item">
-                                      <i class="fa fa-share icon"></i>128
-                                  </a>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-      {{searchResults['find_blog']}}<br>
-      <hr>
-      {{searchResults['profile_serializer']}}
-</div>
-
+        <div class="row" v-if="searchResults['find_blog'].length > 0 && searchResults['profile_serializer'].length > 0">
+            <div class="col-sm-8 col-sm-offset-2 offset-2 mt-5" v-for="searchResult in searchResults['find_blog']" :key="searchResult.id">
+                  <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-white post">
+                            <div class="post-heading">
+                                <div class="pull-left image" v-for="profile in searchResults['profile_serializer']" :key="profile.id">
+                                    <img v-if="searchResult.owner == profile.user" :src="`http://127.0.0.1:8000${profile.profile_picture}`" class="img-circle avatar" alt="user profile image">
+                                </div>
+                                <div class="pull-left meta">
+                                    <div class="title h5">
+                                        <a href=""><b>{{searchResult.owner}}</b></a>
+                                    </div>
+                                    <h6 class="text-muted time">{{searchResult.created}}</h6>
+                                </div>
+                            </div>
+                            <div class="post-image">
+                                <router-link :to="{name:'detail-blog',params:{id:searchResult.id}}">
+                                  <img src=""><img :src="`http://127.0.0.1:8000${searchResult.blog_image}`" class="image" alt="image post">
+                                </router-link>
+                            </div>
+                            <div class="post-description">
+                                <router-link :to="{name:'detail-blog',params:{id:searchResult.id}}" class="text-secondary">
+                                  <h4>{{searchResult.title}}</h4>
+                                </router-link>
+                                <p>{{searchResult.body.split(/[!,?,.]/,5).toString()}}...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" v-else>
+            <div class="col-sm-10 col-sm-offset-2 offset-1 text-center mt-5">
+                <div class="alert alert-danger font-weight-bold text-secondary">Not Found Posts</div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -55,7 +49,6 @@
     },
     created(){
         console.log('what is this?')
-        // console.log('History url ', window.history.back())//listed before clicked url at browser
         this.searchResults = this.$store.state.searchResults
     },
     mounted(){

@@ -9,7 +9,7 @@
               </div>
               <form @submit.prevent="submitLoginForm" method="POST" autocomplete="off">
                   <div class="form-group">
-                      <input type="text" v-model="username" class="form-control" placeholder="Username" required>
+                      <input type="text" ref="username" v-model="username" class="form-control" placeholder="Username" required>
                   </div>
                   <div class="form-group">
                       <input type="password" v-model="password" class="form-control" placeholder="Password"  required>
@@ -46,7 +46,6 @@
     },
     methods: {
       async submitLoginForm(){
-
           //When user login one more time refresh axios.defaults.headers.common Authorization token refresh
           axios.defaults.headers.common['Authorization'] = ''
           window.localStorage.removeItem('token')
@@ -76,11 +75,14 @@
               this.errors.push('Something Went Wrong.Please Check Out')
             })
 
-      }
+      },
     },
     mounted(){
       window.document.title = 'Log In'
-    }
+      this.$refs.username.focus()
+    },
+    created() {
+    },
   }
 </script>
 

@@ -14,7 +14,7 @@
             <div class="form-row">
               <div class="col form-group">
                 <label>First name</label>
-                <input @blur="$v.username.$touch()" v-model="username" :class="{'is-invalid':$v.username.$error}" type="text"  class="form-control" placeholder="First Name" required/>
+                <input ref="username" @blur="$v.username.$touch()" v-model="username" :class="{'is-invalid':$v.username.$error}" type="text"  class="form-control" placeholder="First Name" required/>
                 <small v-if="!$v.username.required" class="form-text text-danger font-weight-bold">This field required input data</small>
                 <small v-if="!$v.username.maxLength" class="form-text text-danger font-weight-bold">Limited input 15 character</small>
                 <small v-if="!$v.username.minLength" class="form-text text-danger font-weight-bold">Minimum input 3 character</small>
@@ -134,6 +134,7 @@
     },
     mounted() {
       window.document.title = 'Sign Up'
+      this.$refs.username.focus()
     },
   };
 </script>

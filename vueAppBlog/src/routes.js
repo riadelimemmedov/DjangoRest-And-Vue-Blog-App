@@ -8,6 +8,10 @@ import Signup from './components/Signup.vue'
 import Login from './components/Login.vue'
 import PostDetail from './components/PostDetail.vue'
 import SearhResult from './components/SearhResult.vue'
+import Profile from './components/Profile.vue'
+import testcompnnentimage from './components/testcompnnentimage.vue'
+
+
 
 //!Utilize VueRouter
 Vue.use(VueRouter)
@@ -20,7 +24,10 @@ export default new Router({
     {path:'/sign-up',component:Signup,name:'sign-up'},
     {path:'/login',component:Login,name:'login'},
     {path:'/detail-blog/:id',component:PostDetail,name:'detail-blog'},
-    {path:'/search-result',component:SearhResult,name:'search-result'}
+    {path:'/search-result',component:SearhResult,name:'search-result'},
+    {path:'/profile/:username',component:Profile,name:'profile'},
+
+    {path:'/test-component',component:testcompnnentimage}
   ]
 })
 

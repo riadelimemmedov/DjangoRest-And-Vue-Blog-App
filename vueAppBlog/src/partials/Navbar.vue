@@ -12,8 +12,8 @@
           <router-link class="nav-link" :to="{name:'home'}" active-class="active">Posts</router-link>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="#">Profile</a>
+        <li class="nav-item" v-if="token_value">
+          <router-link class="nav-link" :to="{name:'profile',params:{username:'riad'}}" active-class="active">Profile</router-link>
         </li>
       {{django_auth_token}}
 
@@ -23,13 +23,8 @@
       <form class="form-inline my-2 my-lg-0" method="POST" @submit.prevent="searchPostFromBackend()">
       <input type="hidden" name="csrfmiddlewaretoken" :value="django_auth_token">
         <template v-if="token_value">
-
-
-
           <span class="nav-item">
               <a class="nav-link" @click="logOut" style="cursor:pointer">Log Out</a>
-              <!-- <router-link class="nav-link" :to="{name:'login'}" active-class="active">Log Out</router-link> -->
-              <!-- LogOut funstion writinf after -->
           </span>
         </template>
 
@@ -38,7 +33,7 @@
                 <router-link class="nav-link" :to="{name:'sign-up'}" active-class="active">Sign Up</router-link>
             </span>
             <span class="nav-item">
-              <router-link class="nav-link" :to="{name:'login'}" active-class="active">Log In</router-link>
+                <router-link class="nav-link" :to="{name:'login'}" active-class="active">Log In</router-link>
             </span>
         </template>
 
@@ -55,7 +50,6 @@
             <span class="text-danger position-relative font-weight-bold" style="left:200px;top:50px;z-index:99999">Not Found Post</span>
           </div>
       </div>
-
         <button class="btn btn-outline-success my-2 my-sm-0" id="search-button" type="submit">Search</button>
       </form>
 
