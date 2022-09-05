@@ -6,15 +6,19 @@
                     <div class="col-sm-12">
                         <div class="panel panel-white post">
                             <div class="post-heading">
-                                <div class="pull-left image" v-for="profile in searchResults['profile_serializer']" :key="profile.id">
-                                    <img v-if="searchResult.owner == profile.user" :src="`http://127.0.0.1:8000${profile.profile_picture}`" class="img-circle avatar" alt="user profile image">
-                                </div>
-                                <div class="pull-left meta">
-                                    <div class="title h5">
-                                        <a href=""><b>{{searchResult.owner}}</b></a>
+                                  <div class="pull-left image" v-for="profile in searchResults['profile_serializer']" :key="profile.id">
+                                      <router-link :to="{name:'profile',params:{username:profile.user}}">
+                                        <img v-if="searchResult.owner == profile.user" :src="`http://127.0.0.1:8000${profile.profile_picture}`" class="img-circle avatar" alt="user profile image">
+                                      </router-link>
+                                    <div class="pull-left meta">
+                                        <div class="title h5" v-if="searchResult.owner == profile.user">
+                                          <router-link :to="{name:'profile',params:{username:profile.user}}">
+                                              <b>{{searchResult.owner}}</b>
+                                          </router-link>
+                                        </div>
+                                        <!-- <h6 class="text-muted time">{{searchResult.created}}</h6> -->
                                     </div>
-                                    <h6 class="text-muted time">{{searchResult.created}}</h6>
-                                </div>
+                                  </div>
                             </div>
                             <div class="post-image">
                                 <router-link :to="{name:'detail-blog',params:{id:searchResult.id}}">

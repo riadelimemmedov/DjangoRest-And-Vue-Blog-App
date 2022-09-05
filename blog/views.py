@@ -153,8 +153,18 @@ class CommentBlogDetail(generics.RetrieveUpdateDestroyAPIView):
 
 #!get_csrf_token
 def get_csrf_token(request):
+    profile_serializer = ''
     token = django.middleware.csrf.get_token(request)
-    return JsonResponse({'token': token})
+    
+    user_authentication_token = request.GET.get('user_authentication_token')
+    if user_authentication_token:
+        user = Token.objects.get(key=user_authentication_token).user
+        profile = Profile.objects.get(user=user)
+        profile_serializer = ProfileSerializer(profile)
+        return JsonResponse({'token': token,'profile_serializer':profile_serializer.data},safe=True)
+    else:
+        return JsonResponse({'token': token},safe=True)
+        
 
 @csrf_exempt
 def searchBlogView(request):

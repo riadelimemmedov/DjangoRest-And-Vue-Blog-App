@@ -7,12 +7,7 @@
               <div class="card mb-4 mb-xl-0">
                   <div class="card-header">Profile Picture</div>
                   <div class="card-body text-center">
-                      <!-- Profile picture image-->
-                      <img class="img-account-profile rounded-circle mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
-                      <!-- Profile picture help block-->
-                      <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                      <!-- Profile picture upload button-->
-                      <button class="btn btn-primary" type="button">Upload new image</button>
+                      <img class="img-account-profile rounded border shadow mb-2" :src="`http://127.0.0.1:8000${image_url}`" alt="">
                   </div>
               </div>
           </div>
@@ -21,23 +16,23 @@
               <div class="card mb-4">
                   <div class="card-header">Account Details</div>
                   <div class="card-body">
-                      <form>
+                      <form method="POST" @submit.prevent="updateProfile">
                           <!-- Form Group (username)-->
                           <div class="mb-3">
-                              <label class="small mb-1" for="inputUsername">Username (how your name will appear to other users on the site)</label>
-                              <input class="form-control" id="inputUsername" type="text" placeholder="Enter your username" value="username">
+                              <label class="small mb-1" for="inputUsername">Username</label>
+                              <input class="form-control" v-model="username" id="inputUsername" type="text" placeholder="Enter your username" required>
                           </div>
                           <!-- Form Row-->
                           <div class="row gx-3 mb-3">
                               <!-- Form Group (first name)-->
                               <div class="col-md-6">
                                   <label class="small mb-1" for="inputFirstName">First name</label>
-                                  <input class="form-control" id="inputFirstName" type="text" placeholder="Enter your first name" value="Valerie">
+                                  <input class="form-control" v-model="first_name" id="inputFirstName" type="text" placeholder="Enter your first name">
                               </div>
                               <!-- Form Group (last name)-->
                               <div class="col-md-6">
                                   <label class="small mb-1" for="inputLastName">Last name</label>
-                                  <input class="form-control" id="inputLastName" type="text" placeholder="Enter your last name" value="Luna">
+                                  <input class="form-control" id="inputLastName" v-model="last_name" type="text" placeholder="Enter your last name">
                               </div>
                           </div>
                           <!-- Form Row        -->
@@ -45,34 +40,30 @@
                               <!-- Form Group (organization name)-->
                               <div class="col-md-6">
                                   <label class="small mb-1" for="inputOrgName">Organization name</label>
-                                  <input class="form-control" id="inputOrgName" type="text" placeholder="Enter your organization name" value="Start Bootstrap">
+                                  <input class="form-control" id="inputOrgName" v-model="organization_name" type="text" placeholder="Enter your organization name">
                               </div>
                               <!-- Form Group (location)-->
                               <div class="col-md-6">
                                   <label class="small mb-1" for="inputLocation">Location</label>
-                                  <input class="form-control" id="inputLocation" type="text" placeholder="Enter your location" value="San Francisco, CA">
+                                  <input class="form-control" v-model="location" id="inputLocation" type="text" placeholder="Enter your location">
                               </div>
                           </div>
                           <!-- Form Group (email address)-->
                           <div class="mb-3">
                               <label class="small mb-1" for="inputEmailAddress">Email address</label>
-                              <input class="form-control" id="inputEmailAddress" type="email" placeholder="Enter your email address" value="name@example.com">
+                              <input class="form-control" v-model="email" id="inputEmailAddress" type="email" placeholder="Enter your email address">
                           </div>
                           <!-- Form Row-->
                           <div class="row gx-3 mb-3">
                               <!-- Form Group (phone number)-->
-                              <div class="col-md-6">
-                                  <label class="small mb-1" for="inputPhone">Phone number</label>
-                                  <input class="form-control" id="inputPhone" type="tel" placeholder="Enter your phone number" value="555-123-4567">
-                              </div>
                               <!-- Form Group (birthday)-->
-                              <div class="col-md-6">
-                                  <label class="small mb-1" for="inputBirthday">Birthday</label>
-                                  <input class="form-control" id="inputBirthday" type="text" name="birthday" placeholder="Enter your birthday" value="06/10/1988">
+                              <div class="col-md-12">
+                                  <label class="small mb-1" for="inputBio">Birthday</label>
+                                  <textarea class="form-control" v-model="bio" id="inputBio" rows="4" placeholder="Enter Your Bio"></textarea>
                               </div>
                           </div>
                           <!-- Save changes button-->
-                          <button class="btn btn-primary" type="button">Save changes</button>
+                          <button class="btn btn-primary" type="submit">Save changes</button>
                       </form>
                   </div>
               </div>
@@ -82,6 +73,75 @@
 </template>
 
 <script>
+
+    import PictureInput from 'vue-picture-input'
+    import axios from 'axios'
+
+    export default{
+      name: 'app',
+        data () {
+          return {
+            user_slug:'',
+            username:'',
+            first_name:'',
+            last_name:'',
+            organization_name:'',
+            location:'',
+            email:'',
+            bio:'',
+            image_url:''
+          }
+        },
+        components: {
+          PictureInput
+        }, 
+        methods: {
+          getProfileData(){
+            axios({
+              method:'GET',
+              url:`update/profile/${this.user_slug}`,
+            })
+            .then((response) => {
+              console.log('respose value from profile ', response.data)
+              this.username = response.data.user
+              this.first_name = response.data.firstname
+              this.last_name = response.data.lastname
+              this.organization_name = response.data.organization_name
+              this.location = response.data.location
+              this.email = response.data.email_address
+              this.bio = response.data.bio
+              this.image_url = response.data.profile_picture
+              console.log('Successfully return profile','nice')
+            })
+            .catch((err)=>{
+              console.log('Error return user ', err)
+            })
+          },
+          updateProfile(){
+            axios({
+              method:'POST',
+              url:`update/profile/${this.user_slug}/`,
+              data:JSON.stringify({
+                "user":this.username,
+                "firstname":this.first_name,
+                "lastname":this.last_name,
+                "email_address":this.email,
+                "organization_name":this.organization_name,
+                "location":this.location,
+                "bio":this.bio,
+              }),
+              headers:{
+                  'Content-Type': 'application/json'
+              }
+            })
+            console.log('update profile successfully working')
+          }
+        },
+        created(){
+          this.user_slug = window.location.href.split('/')[4]
+          this.getProfileData()
+        }
+      }
 
 </script>
 

@@ -8,6 +8,11 @@ from django.db.models.signals import post_save
 #!Profile
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
+    firstname = models.CharField(max_length=50,null=True)
+    lastname = models.CharField(max_length=50,null=True)
+    organization_name = models.CharField(max_length=50,null=True)
+    location = models.CharField(max_length=50,null=True)
+    email_address = models.EmailField(max_length=50,null=True)
     bio = models.TextField(blank=True)
     profile_picture = models.ImageField(upload_to='profilepicture',validators=[FileExtensionValidator(['png','jpg','jpeg'])],blank=True)
     slug = models.SlugField(unique=True,db_index=True,blank=True)

@@ -12,10 +12,11 @@
           <router-link class="nav-link" :to="{name:'home'}" active-class="active">Posts</router-link>
         </li>
 
-        <li class="nav-item" v-if="token_value">
-          <router-link class="nav-link" :to="{name:'profile',params:{username:'riad'}}" active-class="active">Profile</router-link>
+        <li class="nav-item" v-if="authenticatedToken">
+          <router-link class="nav-link" :to="{name:'profile',params:{username:current_user_profile_slug}}" active-class="active">Profile</router-link>
         </li>
-      {{django_auth_token}}
+
+        user token - {{authenticatedToken}}
 
       </ul>
 
@@ -72,10 +73,11 @@
       return{
         isLoggedIn:false,
         authenticatedToken:this.token_value,
+        current_user_profile_slug:'',
         django_auth_token:'',
-        allPosts:[],
+        searched_post_text:'',
         search_results:[],
-        searched_post_text:''
+        allPosts:[],
       }
     },
     methods:{
@@ -150,9 +152,11 @@
         }
       },
       getTokenFromDjango(){
-        axios.get('get-token/')
+        axios.get('get-token/',{params:{user_authentication_token:this.authenticatedToken}})
           .then((response) => {
             console.log('Returned Token Value ', response.data.token)
+            console.log('Current Login Profile slug value ', response.data.profile_serializer.slug)
+            this.current_user_profile_slug = response.data.profile_serializer.slug
             this.django_auth_token = response.data.token
             this.$cookies.set('csrfmiddlewaretoken',this.django_auth_token)
           })
