@@ -31,13 +31,21 @@ class ProfileUpdateView(APIView):
         return response.Response(serializer_profile.data,status=status.HTTP_200_OK)
 
     def post(self,request,slug,format=None):
-        profile = self.get_object(slug)
-        for i,j in request.data.items():
-            profile.i = j
-            profile.save()
-            print(i,j)
-        print('profile after saved ' , profile.firstname)
-        print('Save not sure')
-        print('profile ', profile)
-        return HttpResponse('finish')
+        print('firstname ', request.data['firstname'])
+        print('lastname ', request.data['lastname'])
+        print('organization_name ', request.data['organization_name'])
+        print('location ', request.data['location'])
+        print('email_address ', request.data['email_address'])
+        print('bio ', request.data['bio']) 
         
+        
+        profile = Profile.objects.filter(slug=slug).update(
+            firstname=request.data['firstname'],
+            lastname=request.data['lastname'],
+            organization_name=request.data['organization_name'],
+            email_address=request.data['email_address'],
+            location=request.data['location'],
+            bio = request.data['bio']
+        )
+        print('profile updated ', profile)
+        return response.Response({'success': True})

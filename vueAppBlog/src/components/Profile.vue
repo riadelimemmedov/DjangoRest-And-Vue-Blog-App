@@ -1,6 +1,13 @@
 <template>
     <div class="container-xl px-4 mt-5">
       <hr class="mt-0 mb-4">
+        <div class="alert alert-dismissible fade show" :class="isAlert ? 'alert-success' : 'alert-danger'" role="alert" id="alert-box" v-if="isAlert">
+            <strong v-if="isAlert">Successfully Update Profile Information</strong>
+            <strong v-else>Failed to Update Profile Information</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="closeAlert()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
       <div class="row">
           <div class="col-xl-4">
               <!-- Profile picture card-->
@@ -20,19 +27,19 @@
                           <!-- Form Group (username)-->
                           <div class="mb-3">
                               <label class="small mb-1" for="inputUsername">Username</label>
-                              <input class="form-control" v-model="username" id="inputUsername" type="text" placeholder="Enter your username" required>
+                              <input class="form-control read only" v-model="username" id="inputUsername" type="text" placeholder="Enter your username" :readonly="isDisabled" disabled>
                           </div>
                           <!-- Form Row-->
                           <div class="row gx-3 mb-3">
                               <!-- Form Group (first name)-->
                               <div class="col-md-6">
                                   <label class="small mb-1" for="inputFirstName">First name</label>
-                                  <input class="form-control" v-model="first_name" id="inputFirstName" type="text" placeholder="Enter your first name">
+                                  <input class="form-control" v-model="first_name" id="inputFirstName" @keyup="changeEventTrigger" type="text" placeholder="Enter your first name">
                               </div>
                               <!-- Form Group (last name)-->
                               <div class="col-md-6">
                                   <label class="small mb-1" for="inputLastName">Last name</label>
-                                  <input class="form-control" id="inputLastName" v-model="last_name" type="text" placeholder="Enter your last name">
+                                  <input class="form-control" id="inputLastName" @keyup="changeEventTrigger" v-model="last_name" type="text" placeholder="Enter your last name">
                               </div>
                           </div>
                           <!-- Form Row        -->
@@ -40,30 +47,30 @@
                               <!-- Form Group (organization name)-->
                               <div class="col-md-6">
                                   <label class="small mb-1" for="inputOrgName">Organization name</label>
-                                  <input class="form-control" id="inputOrgName" v-model="organization_name" type="text" placeholder="Enter your organization name">
+                                  <input class="form-control" id="inputOrgName" @keyup="changeEventTrigger" v-model="organization_name" type="text" placeholder="Enter your organization name">
                               </div>
                               <!-- Form Group (location)-->
                               <div class="col-md-6">
                                   <label class="small mb-1" for="inputLocation">Location</label>
-                                  <input class="form-control" v-model="location" id="inputLocation" type="text" placeholder="Enter your location">
+                                  <input class="form-control" v-model="location" @keyup="changeEventTrigger" id="inputLocation" type="text" placeholder="Enter your location">
                               </div>
                           </div>
                           <!-- Form Group (email address)-->
                           <div class="mb-3">
                               <label class="small mb-1" for="inputEmailAddress">Email address</label>
-                              <input class="form-control" v-model="email" id="inputEmailAddress" type="email" placeholder="Enter your email address">
+                              <input class="form-control" v-model="email" @keyup="changeEventTrigger" id="inputEmailAddress" type="email" placeholder="Enter your email address">
                           </div>
                           <!-- Form Row-->
                           <div class="row gx-3 mb-3">
                               <!-- Form Group (phone number)-->
                               <!-- Form Group (birthday)-->
                               <div class="col-md-12">
-                                  <label class="small mb-1" for="inputBio">Birthday</label>
-                                  <textarea class="form-control" v-model="bio" id="inputBio" rows="4" placeholder="Enter Your Bio"></textarea>
+                                  <label class="small mb-1" for="inputBio">Bio</label>
+                                  <textarea class="form-control" v-model="bio" @keyup="changeEventTrigger" id="inputBio" rows="4" placeholder="Enter Your Bio"></textarea>
                               </div>
                           </div>
                           <!-- Save changes button-->
-                          <button class="btn btn-primary" type="submit">Save changes</button>
+                          <button class="btn btn-primary disabled" id="updateButton" type="button">Save changes</button>
                       </form>
                   </div>
               </div>
@@ -81,6 +88,8 @@
       name: 'app',
         data () {
           return {
+            isDisabled:false,
+            isAlert:false,
             user_slug:'',
             username:'',
             first_name:'',
@@ -94,7 +103,7 @@
         },
         components: {
           PictureInput
-        }, 
+        },
         methods: {
           getProfileData(){
             axios({
@@ -118,11 +127,11 @@
             })
           },
           updateProfile(){
+            this.isDisabled = true
             axios({
               method:'POST',
               url:`update/profile/${this.user_slug}/`,
               data:JSON.stringify({
-                "user":this.username,
                 "firstname":this.first_name,
                 "lastname":this.last_name,
                 "email_address":this.email,
@@ -133,14 +142,33 @@
               headers:{
                   'Content-Type': 'application/json'
               }
+            }).
+            then((response)=>{
+              this.isAlert = null
+              console.log('Before updaye isAlert value ', this.isAlert)
+              console.log('response value success', response.data.success)
+              this.isAlert = response.data.success
+              document.querySelector('#updateButton').classList.add('disabled')
             })
-            console.log('update profile successfully working')
-          }
+            .catch((err)=>{
+              console.log('When updated profile encount error ', err)
+              this.isAlert = false
+            })
+          },
+          closeAlert(){
+            document.getElementById('alert-box').hidden = true
+            this.isAlert = false
+          },
+          changeEventTrigger(){
+            document.querySelector('#updateButton').classList.remove('disabled')
+            document.querySelector('#updateButton').type='submit'
+            console.log('changed input value ')
+          },
         },
         created(){
           this.user_slug = window.location.href.split('/')[4]
           this.getProfileData()
-        }
+        },
       }
 
 </script>

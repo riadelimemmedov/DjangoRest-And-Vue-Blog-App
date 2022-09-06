@@ -19,7 +19,10 @@
 
                     <ul class="post-meta list-inline">
                         <li class="list-inline-item">
-                            <i class="fa fa-user-circle-o"></i> <a href="#">{{post.owner}}</a>
+                            <i class="fa fa-user-circle-o"></i>
+                            <router-link>
+                              <a href="">{{post.owner}}</a>
+                            </router-link>
                         </li>
                         <li class="list-inline-item">
                             <i class="fa fa-calendar-o"></i> {{formatDate(post.created)}}<a href="#"></a>
