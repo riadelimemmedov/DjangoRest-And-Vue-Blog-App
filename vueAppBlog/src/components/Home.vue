@@ -34,7 +34,7 @@
                           <i class="fa fa-comment" aria-hidden="true"> {{post.blog_comments.length}}</i>
                         </li>
                         <li class="list-inline-item">
-                          <i class="fa fa-thumbs-o-up" aria-hidden="true">&nbsp;{{post.liked.length}}</i><!-- Like modelini yazandan sonra goster burda her posta gelen like sayini -->
+                          <i class="fa fa-thumbs-o-up" aria-hidden="true">&nbsp;{{post.liked.length}}</i>
                         </li>
                     </ul>
                     <p>
@@ -45,14 +45,6 @@
                         Read More
                     </router-link>
 
-                    <!-- Liked Blog Value - {{liked_blog_value}},
-                    Post liked - {{post.is_liked}}<hr>
-                    Includes User Liked - {{post.liked.includes(current_user.username)}}
-                    <hr>
-
-                          fuck {{likedPostValue}}
-
-                    liked length each posts  - {{post.liked.length}} -->
 
                     <form @submit.prevent="likeToPost($event)" method="POST" class="d-inline">
                       <input type="hidden" :value="post_id=post.id" name="blog_id">
@@ -114,8 +106,6 @@
       onChangePage(pageOfItems){
         this.pageOfItems=pageOfItems
         this.$store.commit('renderPaginationPost',pageOfItems)
-
-        console.log('Hal Hazirdaki Paginationdaki Postlar ', this.pageOfItems)
       },
       getAllPosts(){
         axios.get('/',{

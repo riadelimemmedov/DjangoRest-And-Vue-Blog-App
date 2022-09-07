@@ -52,11 +52,10 @@
       }
     },
     created(){
-        console.log('what is this?')
         this.searchResults = this.$store.state.searchResults
     },
     mounted(){
-      console.log('eeyyyyy bro what is this')
+
     }
   }
 </script>

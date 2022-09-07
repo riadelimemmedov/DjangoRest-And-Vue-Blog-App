@@ -44,7 +44,8 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentBlog
         fields = ['body','blog','owner']
-        
+
+#!UserSerilizers
 class UserSerilizers(serializers.ModelSerializer):
     class Meta:
         model = User

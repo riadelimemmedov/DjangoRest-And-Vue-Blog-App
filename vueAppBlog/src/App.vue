@@ -30,7 +30,6 @@
       const token = this.$store.state.token
       this.token = token
 
-      console.log('Login Token Value ', token);
 
       if(token){
         axios.defaults.headers.common['Authorization'] = "Token " + token

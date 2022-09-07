@@ -65,9 +65,6 @@
               this.$store.commit('setToken',token)
               axios.defaults.headers.common['Authorization'] = "Token " + token
               window.localStorage.setItem('token',token)
-
-              //After login redirect home page
-              // this.$router.replace({name:'home'})
               window.location.href = '/'
             })
             .catch((err)=>{

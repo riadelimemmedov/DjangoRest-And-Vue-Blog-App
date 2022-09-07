@@ -145,8 +145,6 @@
             }).
             then((response)=>{
               this.isAlert = null
-              console.log('Before updaye isAlert value ', this.isAlert)
-              console.log('response value success', response.data.success)
               this.isAlert = response.data.success
               document.querySelector('#updateButton').classList.add('disabled')
             })

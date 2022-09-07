@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--ya)h**lr^o0+2aw*2y#v4x_6+w)$ajzx&(e823gnbpme=4qt9'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -52,8 +53,8 @@ INSTALLED_APPS = [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
-
 CSRF_COOKIE_HTTPONLY = False
+
 # CORS_ORIGIN_WHITELIST = ["http://localhost:8080"]
 # CORS_ALLOW_CREDENTIALS = True
 # CORS_ALLOW_METHODS  = [
@@ -94,9 +95,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'blogVueRestDjango.urls'
 
-
-#<input type="hidden" name="csrfmiddlewaretoken" value="BAqdmB9AcN1gCnNHaKsCPh45Wv5I51xStb1KGlNetOTcp5wmfFihQfBqO2CpmQrt">
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -116,23 +114,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'blogVueRestDjango.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 #!Connect Mysql
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':'crud',
-        'USER':'root',
-        'PASSWORD':'riad123321'
+        'ENGINE': config('ENGINE'),
+        'NAME':config('NAME'),
+        'USER':config('USER'),
+        'PASSWORD':config('PASSWORD')
     }
 }
 

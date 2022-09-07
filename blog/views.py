@@ -31,13 +31,10 @@ class BlogListCreateView(views.APIView):
         current_user = ''
         liked = None
         usertoken = self.request.GET.get('user_token')
-        print('User Token Value ', usertoken)
         if usertoken:
             current_user = Token.objects.get(key=usertoken).user
             profile_serializer = UserSerilizers(current_user)
-            
-            # print(' User Serializer ', profile_serializer.data)
-            # print('IF isledi ve blog ve userlar geri dondu response ile')
+
             return Response({'serializer_data':serializer.data,'current_user':profile_serializer.data},status=status.HTTP_200_OK)
         else:
             print('Ancag postlar geri dondu cunki user giris etmeyib')
@@ -82,16 +79,8 @@ class BlogListCreateView(views.APIView):
                         like.value = 'Like'
                         like.is_user_liked = False
                         
-                print('Before save like value data ', like.value)
                 like.save()
                 return Response({'like_is_user_liked':like.is_user_liked,'blog_obj':blog_serializer.data})
-                
-                # print('Header Token ', header_token)
-                # print('Vue terefden axiosdan POST request geldi yoxlama ucun')
-                # print('Method Value ', self.request.method)
-                return HttpResponse('Ugurlu bir post reqeust vue terefinden hemde cookie')
-                #profile = Profile.objects.get(user=self.request.user)
-                #serializer.save(owner=profile)
                 
 #!BlogDetailView
 class BlogDetailView(views.APIView):
@@ -102,14 +91,12 @@ class BlogDetailView(views.APIView):
             print('Err')
 
     def get(self,request,pk,format=None):
-        user = Token.objects.get(key='1d6b91bee50efa3f158f3f6b4d0ab218f26ab089').user
         comments = CommentBlog.objects.filter(blog_id=pk)
         print('Comment lIST HER BLOG ', comments)
         blog = self.get_object(pk)
         serializer = BlogSerializer(blog)
         commentserializer = CommentSerializer(comments,many=True)
         print(commentserializer)
-        print('Serialize commenrt serializer ' , commentserializer.data)
         return Response({'serializer':serializer.data,'commentserialize':commentserializer.data})
         
 #!CategoryListCreateView
@@ -132,9 +119,6 @@ class CommentBlogListCreateView(generics.ListCreateAPIView):
     #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     def perform_create(self,serializer):
-        # user_fuck = Token.objects.get(key=self.request.POST['user_token'])
-        # print('blet', user_fuck)
-        print('Fuck isledi perform create commentde')
         print(self.request.POST)
         
         if self.request.method == 'POST':
@@ -166,11 +150,11 @@ def get_csrf_token(request):
         return JsonResponse({'token': token},safe=True)
         
 
+#!searchBlogView
 @csrf_exempt
 def searchBlogView(request):
     result = get_csrf_token(request)
     csrfmiddlewaretoken_django = json.loads(result.getvalue())['token']
-    print('noldu amk burda')
     if request.method == 'POST' and result and csrfmiddlewaretoken_django !='':
         request_values = [i for i in request.POST]
         request_value = json.loads(request_values[0])
@@ -178,14 +162,9 @@ def searchBlogView(request):
         searched_post_text = request_value['searched_post_text']
         if searched_post_text != '':
             find_blog = Blog.objects.filter(title__icontains=searched_post_text)
-            serializer_find_blog = BlogSerializer(find_blog,many=True)
-            
-            
-            # user = Token.objects.get(key=request_value['logged_user_token']).user
+            serializer_find_blog = BlogSerializer(find_blog,many=True)            
             profile = Profile.objects.all()
             profile_serializer = ProfileSerializer(profile,many=True)
-            print('Serializer find blog  ', type(serializer_find_blog.data))
         return JsonResponse({'find_blog':serializer_find_blog.data,'profile_serializer':profile_serializer.data},safe=True)
-    
-    return HttpResponse('neyse axi get de isledi')
+    return HttpResponse('return get request')
     

@@ -26,8 +26,6 @@ export default new Router({
     {path:'/detail-blog/:id',component:PostDetail,name:'detail-blog'},
     {path:'/search-result',component:SearhResult,name:'search-result'},
     {path:'/profile/:username',component:Profile,name:'profile'},
-
-    {path:'/test-component',component:testcompnnentimage}
   ]
 })
 

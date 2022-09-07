@@ -16,6 +16,7 @@ class ProfileListCreateView(generics.ListAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
+#!ProfileUpdateView
 @method_decorator(csrf_exempt,name='dispatch')
 class ProfileUpdateView(APIView):
     def get_object(self,slug):
@@ -25,20 +26,11 @@ class ProfileUpdateView(APIView):
             raise Http404
 
     def get(self,request,slug,format=None):
-        print('Slug value ', slug)
         profile = self.get_object(slug)
         serializer_profile = ProfileSerializer(profile)
         return response.Response(serializer_profile.data,status=status.HTTP_200_OK)
 
-    def post(self,request,slug,format=None):
-        print('firstname ', request.data['firstname'])
-        print('lastname ', request.data['lastname'])
-        print('organization_name ', request.data['organization_name'])
-        print('location ', request.data['location'])
-        print('email_address ', request.data['email_address'])
-        print('bio ', request.data['bio']) 
-        
-        
+    def post(self,request,slug,format=None):        
         profile = Profile.objects.filter(slug=slug).update(
             firstname=request.data['firstname'],
             lastname=request.data['lastname'],
